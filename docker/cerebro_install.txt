@@ -1,0 +1,12 @@
+# Install cerebro to use with Elastic Search
+docker pull yannart/cerebro
+mkdir -p ~/cerebro/logs
+cd ~/cerebro/
+git clone --depth 1 https://github.com/lmenezes/cerebro.git conf
+cd conf
+git filter-branch --prune-empty --subdirectory-filter conf
+
+# Change in reference.conf
+sed -i '' 's/play.http.secret.key = ${secret}/play.crypto.secret = ${secret}/g' ~/cerebro/conf/reference.conf
+
+docker run -d -p 9000:9000 --name cerebro -v ~/cerebro/logs:/opt/cerebro/logs  -v ~/cerebro/conf:/opt/cerebro/conf yannart/cerebro:latest
