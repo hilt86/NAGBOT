@@ -1,0 +1,91 @@
+GitHub Multiple Identites
+
+Ok Gents the Following Instructions for the collaborative github stuff.
+
+
+1.
+# Generate a ssh key to use on github
+# Ensure you record the filname location for the ssh config file part
+ssh-keygen -t rsa -C "Some Identifier"
+
+//== EXAMPLE == //
+~# ssh-keygen -t rsa -C "U1234567"
+Generating public/private rsa key pair.
+Enter file in which to save the key (/root/.ssh/id_rsa): /root/.ssh/id_rsa_U1234567
+Enter passphrase (empty for no passphrase): 
+Enter same passphrase again: 
+Your identification has been saved in /root/.ssh/id_rsa_U1234567.
+Your public key has been saved in /root/.ssh/id_rsa_U1234567.pub.
+The key fingerprint is:
+8d:34:86:43:31:95:d5:45:0f:81:32:56:40:ed:07:da U1234567
+The key's randomart image is:
++--[ RSA 2048]----+
+|      +o.++=.+=. |
+|     . o. + =  o |
+|      o +. * .  .|
+|       + +. E .  |
+|        S .  .   |
+|                 |
+|                 |
+|                 |
+|                 |
++-----------------+
+~#
+
+2.
+# Edit ~/.ssh/config
+# Add an Entry as follows
+
+Host <student id>
+   HostName github.com
+   User git
+   IdentityFile <Location of file generated with ssh-keygen>
+   IdentitiesOnly yes
+
+//== EXAMPLE == //
+Host U1234567
+   HostName github.com
+   User git
+   IdentityFile ~/.ssh/id_rsa_U1234567
+   IdentitiesOnly yes
+   
+3. # Add Identity
+ssh-add <IdentityFile from ~/.ssh/config>
+
+//== EXAMPLE == //
+ssh-add id_rsa_U1234567
+
+4. # Add the ~/.ssh/id_rsa_<XXX>.pub key to github
+
+5. # Test Private Key against github
+ssh -T <Host from ~/.ssh/config>
+
+//== EXAMPLE == //
+~# ssh -T U1234567                                                                                                                                               
+Hi Dustin-USQ! You've successfully authenticated, but GitHub does not provide shell access.
+
+6. # Add the following to git
+git remote add <name> <Host from ~/.ssh/config>:<repository>
+
+//== EXAMPLE == //
+git remote add dustin U1234567:hilt86/NAGBOT.git
+
+
+// ======= Create the Script =========
+echo <<EOF>> ~/commit_U1234567.sh
+GIT_COMMITTER_NAME="Firstname Surname" GIT_COMMITTER_EMAIL="U1234567@umail.usq.edu.au" git commit --author="Firstname Surname <U1234567@umail.usq.edu.au>"
+EOF
+
+chmod +x ~/commit_U1234567.sh
+
+// ======= After All Susequent File Changes =========
+
+~/commit_U1234567.sh
+
+Input Changes
+
+1. # Push Changes to github
+git push <identity>
+
+//== EXAMPLE == //
+git push dustin
