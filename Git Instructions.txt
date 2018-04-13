@@ -72,7 +72,7 @@ git remote add dustin U1234567:hilt86/NAGBOT.git
 
 
 // ======= Create the Script =========
-echo <<EOF>> ~/commit_U1234567.sh
+cat <<EOF> ~/commit_U1234567.sh
 GIT_COMMITTER_NAME="Firstname Surname" GIT_COMMITTER_EMAIL="U1234567@umail.usq.edu.au" git commit --author="Firstname Surname <U1234567@umail.usq.edu.au>"
 EOF
 
