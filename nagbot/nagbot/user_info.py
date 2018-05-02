@@ -5,7 +5,7 @@ from slackclient import SlackClient
 
 SLACK_API_TOKEN = "xoxp-2319219074-324410592263-355519630176-aef7c53d42c8e8d2039c9bf04904ad69" # get one from https://api.slack.com/docs/oauth-test-tokens
 CHANNEL_NAME = "nagbot_lives_here"
-NAME = "Bandr"
+NAME = "John Omer-Cooper"
 
 
 
@@ -20,9 +20,10 @@ users = filter(lambda u: u['id'] in members, users_list)
 for user in users:
     print(user['real_name'])
     print(user['id'])
-    #first_name = user['real_name']
+   # first_name = user['real_name']
 #if first_name == NAME:
-    #print (first_name, user['id'])
+ #   print (first_name, user['id'])
+  #  print (user)
 #else:
  #   print ("Can't find them")
  

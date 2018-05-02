@@ -1,9 +1,38 @@
-# all the imports
+""" This is the main NAGBOT file where it will call the functions we write
+    all your work should be done in your assigned function file and not here
+    you don't need to understand this file - all you need to understand is 
+    what your function needs to do. 
+    
+    I (Hilton) will help you connect your function to the main app - again
+    all you need to worry about is your own function.
+"""
+    
 import os
 import sqlite3
 import random
+import sys
+import time
+import re
+from generate_random import generate_random
+# import team member functions
+from qanda import qanda, response_option, escalate # john
+from createrules import createrules # bandr
+from realert import realert # dustin
+# flask modules
 from flask import Flask, request, session, g, redirect, url_for, abort, \
      render_template, flash
+# slack modules
+from slackclient import SlackClient
+
+SLACK_BOT_TOKEN='xoxb-346474841542-DvCJe7SK4SzpRM7iEwtbhrLN'
+# instantiate Slack client
+slack_client = SlackClient(SLACK_BOT_TOKEN)
+name="<@U9JC2HE7R>"
+#admin="<@U9JC2HE7R>" #john
+#admin="<@U9HEUKN7P>" #dustin
+#admin="<@U9V7C7W31>" #bandr
+admin="<@U029D6F2A>" #hilton
+question = "Do you like brussel sprouts ? yes or no"
     
 app = Flask(__name__) # create the application instance :)
 app.config.from_object(__name__) # load config from this file , flaskr.py
@@ -35,4 +64,13 @@ def close_db(error):
         
 @app.route("/")
 def hello():
-    return  "Hello team!" + " here is a random integer : " + str(random.randint(1,101))
+    #return  "Hello team!" + " here is a random integer : "  + str(generate_random(1000))
+    return render_template('index.html')
+    
+
+@app.route("/qanda/", methods=['POST'])
+def run_qanda():
+    qanda(name, question, slack_client)
+    forward_message = "running qanda..."
+    return render_template('index.html', message=forward_message);
+
