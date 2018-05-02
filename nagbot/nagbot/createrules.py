@@ -1,0 +1,2 @@
+def createrules():
+    return
