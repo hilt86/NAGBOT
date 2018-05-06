@@ -1,0 +1,4 @@
+# these files and directories get included in the package
+graft flaskr/templates
+graft flaskr/static
+include flaskr/schema.sql
