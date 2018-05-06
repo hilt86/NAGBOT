@@ -23,7 +23,7 @@ from createrules import createrules # bandr
 #from realert import realert # dustin
 from realert import ReAlert # dustin
 # flask modules
-from flask import Flask, request, session, g, redirect, url_for, abort, render_template, flash, json,Response, jsonify
+from flask import Flask, request, session, g, redirect, url_for, abort, render_template, flash, json, Response, jsonify
 # slack modules
 from slackclient import SlackClient
 
@@ -50,7 +50,6 @@ console.setLevel(logging.DEBUG)
 console.setFormatter(formatter)
 # add the handlers to the logger
 logger.addHandler(console)
-
 
 # Variables required by qanda function.
 SLACK_BOT_TOKEN='xoxb-346474841542-DvCJe7SK4SzpRM7iEwtbhrLN'
@@ -115,62 +114,9 @@ def run_qanda():
 # Test Code Entry Point
 @app.route('/api/json/z/', methods = ['POST'])
 def api_json_z():
-    if request.headers['Content-Type'] == 'application/json':
-        return "JSON Message: " + json.dumps(request.json)
-    else:
-        return "415 Unsupported Media Type ;)"
-        
-# Test Code Entry Point
-@app.route('/api/json/u/', methods = ['POST'])
-def api_json_u():
-    if request.headers['Content-Type'] == 'text/plain':
-        return "Text Message: " + request.data
-    elif request.headers['Content-Type'] == 'application/json':
-        return "JSON Message: " + json.dumps(request.json)
-    elif request.headers['Content-Type'] == 'application/octet-stream':
-        f = open('./binary', 'wb')
-        f.write(request.data)
-        f.close()
-        return "Binary message written!"
-    else:
-        return "415 Unsupported Media Type ;)"
-        
-@app.route('/api/json/d/', methods = ['GET'])
-def api_json_d():
-    data = {
-        'hello'  : 'world',
-        'number' : 3
-    }
-    js = json.dumps(data)
-    resp = Response(js, status=200, mimetype='application/json')
-    resp.headers['Link'] = 'http://nixmechanix.com'
-    return resp
-    
-@app.route('/api/json/a/', methods = ['GET'])
-def api_json_a():
-    data = {
-        'hello'  : 'world',
-        'number' : 3
-    }
-    js = json.dumps(data)
-    resp = jsonify(data)
-    resp.status_code = 200
-    resp.headers['Link'] = 'http://nixmechanix.com'
-    return resp
+    rxjs = ReAlert()
+    return rxjs.receiveJSON(request)
 
-@app.route('/api/echo', methods = ['GET', 'POST', 'PATCH', 'PUT', 'DELETE'])
-def api_echo():
-    if request.method == 'GET':
-        return "ECHO: GET\n"
-    elif request.method == 'POST':
-        return "ECHO: POST\n"
-    elif request.method == 'PATCH':
-        return "ECHO: PACTH\n"
-    elif request.method == 'PUT':
-        return "ECHO: PUT\n"
-    elif request.method == 'DELETE':
-        return "ECHO: DELETE"
-    
 if __name__ == "__main__":
     # Lets make sure we only run this once.
     # Get PID of Application
