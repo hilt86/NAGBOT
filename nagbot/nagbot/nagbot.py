@@ -15,16 +15,43 @@ import random
 import sys
 import time
 import re
+import logging
 from generate_random import generate_random
 # import team member functions
 from qanda import qanda # john
 from createrules import createrules # bandr
-from realert import realert # dustin
+#from realert import realert # dustin
+from realert import ReAlert # dustin
 # flask modules
 from flask import Flask, request, session, g, redirect, url_for, abort, \
      render_template, flash
 # slack modules
 from slackclient import SlackClient
+
+# Setup Logging
+# Create logger
+logger = logging.getLogger('nagbot')
+logger.setLevel(logging.DEBUG)
+
+# Create Formatter
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
+# create file handler which logs even debug messages
+logfile = logging.FileHandler('nagbot.log')
+# This will take anything from DEBUG and Up
+logfile.setLevel(logging.DEBUG)
+logfile.setFormatter(formatter)
+# add the handlers to the logger
+logger.addHandler(logfile)
+
+# create console handler and set level to debug
+console = logging.StreamHandler()
+# This will take anything from DEBUG and Up
+console.setLevel(logging.DEBUG)
+console.setFormatter(formatter)
+# add the handlers to the logger
+logger.addHandler(console)
+
 
 # Variables required by qanda function.
 SLACK_BOT_TOKEN='xoxb-346474841542-DvCJe7SK4SzpRM7iEwtbhrLN'
@@ -58,8 +85,6 @@ app.config.update(dict(
 # setting silent to False will make the app complain if the environment
 # variable is not set
 app.config.from_envvar('NAGBOT_SETTINGS', silent=True)
-#print ("App Root Path is : {}".format(app.root_path))
-#app.run()
         
 def get_db():
     """Opens a new database connection if there is none yet for the
@@ -87,6 +112,14 @@ def run_qanda():
     qanda(name, question, slack_client, slack_channel, nagbot_user_id, admin, resp_time)
     forward_message = "running qanda..."
     return render_template('index.html', message=forward_message);
+
+# Test Code Entry Point
+@app.route("/json/")
+def run_json():
+    a = ReAlert()
+    a.do_something()
+    forward_message = "running json test ..."
+    return render_template('index.html', message=forward_message);
     
 if __name__ == "__main__":
     # Lets make sure we only run this once.
@@ -102,19 +135,20 @@ if __name__ == "__main__":
         else:
             # Generate PidFile
             file(pidfile, 'w').write(pid)
+            logger.info("{0} - Started {1}".format(pid, "NagBOT"))
+        
         # Start App
         app.run(host='0.0.0.0')
         
         # Clean Up
         # Remove PID File
-        print("Remove PID File ({0}): {1}".format(pid, pidfile))
+        logger.info("{0} - Remove PID File : {1}".format(pid, pidfile))
         os.unlink(pidfile)
     except pidFileExists:
-        print ("Pid File Exists !!!")
+        logger.info("{} - Pid File Exists!, exiting ... ".format(pid))
         sys.exit(2)
     except:
-        print("Something Broke")
+        logger.info("{} - Something Broke".format(pid))
     finally:
-        # Remove PID File
-        print("NAGBOT Finished !!!!!")
-        #os.unlink(pidfile)
+        logger.info("{} - Finished".format(pid))
+        
