@@ -23,8 +23,7 @@ from createrules import createrules # bandr
 #from realert import realert # dustin
 from realert import ReAlert # dustin
 # flask modules
-from flask import Flask, request, session, g, redirect, url_for, abort, \
-     render_template, flash
+from flask import Flask, request, session, g, redirect, url_for, abort, render_template, flash, json,Response, jsonify
 # slack modules
 from slackclient import SlackClient
 
@@ -64,7 +63,7 @@ admin="<@U9JC2HE7R>" #john assigned admin user on nagbot_live_here channel.
 #admin="<@U9HEUKN7P>" #dustin
 #admin="<@U9V7C7W31>" #bandr
 #admin="<@U029D6F2A>" #hilton
-question = "Do you like single malt highland whiskey ? yes or no"
+question = "Have you just logged in from IP ADDRESS in LOCATION ? yes or no"
 resp_time=30 # assigned time for user to respond in seconds.
 
 # Exception Class
@@ -114,12 +113,63 @@ def run_qanda():
     return render_template('index.html', message=forward_message);
 
 # Test Code Entry Point
-@app.route("/json/")
-def run_json():
-    a = ReAlert()
-    a.do_something()
-    forward_message = "running json test ..."
-    return render_template('index.html', message=forward_message);
+@app.route('/api/json/z/', methods = ['POST'])
+def api_json_z():
+    if request.headers['Content-Type'] == 'application/json':
+        return "JSON Message: " + json.dumps(request.json)
+    else:
+        return "415 Unsupported Media Type ;)"
+        
+# Test Code Entry Point
+@app.route('/api/json/u/', methods = ['POST'])
+def api_json_u():
+    if request.headers['Content-Type'] == 'text/plain':
+        return "Text Message: " + request.data
+    elif request.headers['Content-Type'] == 'application/json':
+        return "JSON Message: " + json.dumps(request.json)
+    elif request.headers['Content-Type'] == 'application/octet-stream':
+        f = open('./binary', 'wb')
+        f.write(request.data)
+        f.close()
+        return "Binary message written!"
+    else:
+        return "415 Unsupported Media Type ;)"
+        
+@app.route('/api/json/d/', methods = ['GET'])
+def api_json_d():
+    data = {
+        'hello'  : 'world',
+        'number' : 3
+    }
+    js = json.dumps(data)
+    resp = Response(js, status=200, mimetype='application/json')
+    resp.headers['Link'] = 'http://nixmechanix.com'
+    return resp
+    
+@app.route('/api/json/a/', methods = ['GET'])
+def api_json_a():
+    data = {
+        'hello'  : 'world',
+        'number' : 3
+    }
+    js = json.dumps(data)
+    resp = jsonify(data)
+    resp.status_code = 200
+    resp.headers['Link'] = 'http://nixmechanix.com'
+    return resp
+
+@app.route('/api/echo', methods = ['GET', 'POST', 'PATCH', 'PUT', 'DELETE'])
+def api_echo():
+    if request.method == 'GET':
+        return "ECHO: GET\n"
+    elif request.method == 'POST':
+        return "ECHO: POST\n"
+    elif request.method == 'PATCH':
+        return "ECHO: PACTH\n"
+    elif request.method == 'PUT':
+        return "ECHO: PUT\n"
+    elif request.method == 'DELETE':
+        return "ECHO: DELETE"
     
 if __name__ == "__main__":
     # Lets make sure we only run this once.
