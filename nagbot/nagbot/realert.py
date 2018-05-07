@@ -27,22 +27,36 @@ class ReAlert:
         # qanda(name, question, slack_client, slack_channel, nagbot_user_id, admin, resp_time):
         
     def receiveJSON(self, rxdataJSON):
-        self.logger.info('Receiving JSON Data ...')
+        #self.logger.info('Receiving JSON Data ...')
         if rxdataJSON.headers['Content-Type'] == 'application/json':
-            #return "JSON Message: " + json.dumps(request.json)
             jsonData = rxdataJSON.json
-            if jsonData['somefield'] == 'a':
-                self.logger.info("JSON Data - Success")
-                return "Success !!!"
-            elif jsonData['somefield'] == 'b':
-                self.logger.info("JSON Data - More Success")
-                return "More Success !!!!"
+            if jsonData["system"]["auth"]["ssh"]["ip"]:
+                self.logger.info("JSON Data - IP Detected - {}".format(jsonData["system"]["auth"]["ssh"]["ip"]))
+                pass
+            elif jsonData["system"]["auth"]["user"]:
+                self.logger.info("JSON Data - Username Detected - {}".format(jsonData["system"]["auth"]["user"]))
+                pass
             else:
-                self.logger.info("JSON Data - Boo !!!")
-                return "Boo !!!"
+                self.logger.info("JSON Data - Data No Detected")
+                return None
+            rtnData = str(json.dumps([jsonData["system"]["auth"]["ssh"]["ip"],jsonData["system"]["auth"]["user"]]))
+            self.logger.info("Receiving JSON Data - {}".format(rtnData))
+            return rtnData
         else:
             self.logger.info("415 Unsupported Media Type ;)")
-            return "415 Unsupported Media Type ;)"
+            # return "415 Unsupported Media Type ;)"
+            # return str(json.dumps(jsonData))
+            # rtnData = str(json.dumps([jsonData["system"]["auth"]["ssh"]["ip"],jsonData["system"]["auth"]["user"]]))
+            # self.logger.info("Receiving JSON Data - {}".format(rtnData))
+            return None
+    
+    def writeJSONToFile(self, dataJSON):
+        self.logger.info('Writing JSON Data to File ...')
+        data = json.dumps(dataJSON)
+        with open("nagbot.json","a") as f:
+            f.write(data)
+            f.write("\n")
+        f.close()
 
 def some_function():
     module_logger.info('received a call to "some_function"')
