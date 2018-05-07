@@ -1,0 +1,17 @@
+name: ssh_multiple_failures
+es_host: {{ es_host }}
+es_port: {{ es_port }}
+index: filebeat-*
+
+type: cardinality
+cardinality_field: "system.auth.ssh.ip"
+max_cardinality: 2
+query_key: system.auth.user
+timeframe:
+  minutes: 30
+filter:
+- term:
+    system.auth.ssh.event: "Accepted"
+
+alert: post
+http_post_url: "{{ nb_url }}"
