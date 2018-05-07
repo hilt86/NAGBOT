@@ -1,7 +1,3 @@
-## Nagbot
-
-Nagbot is a slack bot that helps organizations keep an eye on authentication events
-
 ### Why is there a nagbot directory within the "nagbot" directory?
 
 It does look confusing however this is required if we want to be able to neatly package up nagbot. This will make it easy for others to download, install and use nagbot. See http://flask.pocoo.org/docs/0.12/tutorial/packaging/#tutorial-packaging
