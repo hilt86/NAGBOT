@@ -56,7 +56,7 @@ class QandA:
                 time.sleep(1)
                 self.resp_time -=1
         else:
-            #print "Connection Failed, invalid token?"
+            # print "Connection Failed, invalid token?"
             self.logger.error("Connection Failed, invalid token?")
 
 
@@ -72,6 +72,7 @@ class QandA:
         else:
             self.question = "Not sure what you mean. Please answer yes or no."
             # qanda(name, question, slack_client, slack_channel,nagbot_user_id, admin, resp_time)
+            qanda()
 
     # def escalate(self, admin, name, slack_client, slack_channel):
     def escalate(self):

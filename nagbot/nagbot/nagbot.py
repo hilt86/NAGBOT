@@ -142,7 +142,7 @@ if __name__ == "__main__":
     # Lets make sure we only run this once.
     # Get PID of Application
     pid = str(os.getpid())
-    # Location of File
+    # Location of PID File
     pidfile = "/home/ec2-user/nagbot.pid"
     
     try:

@@ -43,7 +43,7 @@ class ReAlert:
             self.logger.info("Receiving JSON Data - {}".format(rtnData))
             return rtnData
         else:
-            self.logger.info("415 Unsupported Media Type ;)")
+            self.logger.info("Unsupported Media Type ;)")
             # return "415 Unsupported Media Type ;)"
             # return str(json.dumps(jsonData))
             # rtnData = str(json.dumps([jsonData["system"]["auth"]["ssh"]["ip"],jsonData["system"]["auth"]["user"]]))
