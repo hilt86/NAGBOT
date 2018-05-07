@@ -2,90 +2,127 @@ import logging
 import json
 from slackclient import SlackClient
 import time
+import pprint
+
+pp = pprint.PrettyPrinter(indent=4)
 
 # create logger
 module_logger = logging.getLogger('nagbot.qanda')
 
 # Exception Class
-class qanadaFailed(Exception):
+class qandaFailed(Exception):
+    pass
+class chatTimeOut(Exception):
+    pass
+class chatEscalate(Exception):
     pass
 
 # Main Class
 class QandA:
-    def __init__(self, name, question, slack_client, slack_channel, nagbot_user_id, admin, resp_time):
+    '''
+    The SlackClient makes API Calls to the `Slack Web API <https://api.slack.com/web>`_ as well as
+    managing connections to the `Real-time Messaging API via websocket <https://api.slack.com/rtm>`_
+    It also manages some of the Client state for Channels that the associated token (User or Bot)
+    is associated with.
+    For more information, check out the `Slack API Docs <https://api.slack.com/>`_
+    Init:
+        :Args:
+            token (str): Your Slack Authentication token. You can find or generate a test token
+            `here <https://api.slack.com/docs/oauth-test-tokens>`_
+            Note: Be `careful with your token <https://api.slack.com/docs/oauth-safety>`_
+            proxies (dict): Proxies to use when create websocket or api calls,
+            declare http and websocket proxies using {'http': 'http://127.0.0.1'},
+            and https proxy using {'https': 'https://127.0.0.1:443'}
+    '''
+    def __init__(self, name, question, slack_client, slack_channel, nagbot_user_id, admin, responseTimer):
         self.logger = logging.getLogger('nagbot.qanda.QandA')
         self.logger.debug('Creating an instance of QandA')
-        
+        # 
         self.name = name
         self.question = question
-        self.slack_client = slack_client
+        self.sc = slack_client
         self.slack_channel = slack_channel
         self.nagbot_user_id = nagbot_user_id
         self.admin = admin
-        self.resp_time = resp_time
+        self.responseTimer = responseTimer
         self.answer = ""
-    
+        print("Name is : {}".format(self.name))
+        print("Question is : {}".format(self.question))
+        print("Slack Client is : {}".format(self.sc))
+        # pp.pprint(self.sc)
+        print("Slack Channel is : {}".format(self.slack_channel))
+        print("Nagbot User ID is : {}".format(self.nagbot_user_id))
+        print("Admin is : {}".format(self.admin))
+        print("Response Time is : {}".format(self.responseTimer))
 
-    #def qanda(self, name, question, slack_client, slack_channel, nagbot_user_id, admin, resp_time):
+    #def qanda(self, name, question, slack_client, slack_channel, nagbot_user_id, admin, responseTimer):
     def qanda(self):
         # This function sends and retrieves responses from Slack as nagbot to assigned users.
         # name - is the name of the target user.
         # question - the question requireing a yes or no answer.
         # slack_client - is the OAuth token reuired to communicate with Slack
         # slack_channel and nagbot_user - are the channel and bot user id's.
-        # resp_time - defines how long in sec a user has to respond befor admin is notified.
-        if self.slack_client.rtm_connect():
-            self.logger.info("NagBot connected and running!")
-            response = "Hi," + self.name + "\n"+ self.question
-            slack_client.api_call("chat.postMessage", channel=self.slack_channel, text=response, as_user=True)
-            while True & self.resp_time >= 0:
-                if self.resp_time == 0:
-                    time_out(self.admin, self.name, self.slack_client, self.slack_channel)
-                new_evts = slack_client.rtm_read()
-                for evt in new_evts:
-                    if "type" in evt:
-                        if evt['type']=="message" and evt['channel'] == self.slack_channel:
-                            if evt['user'] != self.nagbot_user_id and "<@" + self.nagbot_user_id + ">" not in evt['text']:
-                                user_info=slack_client.api_call("users.info", user=evt['user'])
-                                #print(evt['text'])
-                                self.logger.info(evt['text'])
-                                answer=evt['text']
-                                response = response_option(answer, name, slack_client, slack_channel, nagbot_user_id, admin, resp_time)
-                                slack_client.api_call("chat.postMessage", channel=evt['channel'], text=response, as_user=True)
-                                return
-                time.sleep(1)
-                self.resp_time -=1
+        # responseTimer - defines how long in sec a user has to respond befor admin is notified.
+        
+        # pp = pprint.PrettyPrinter(indent=4)
+        
+        if self.sc.rtm_connect(with_team_state=False):
+            if self.sc.server.connected is True:
+                self.logger.info("NagBot connected and running!")
+            try:
+                response = "Hi," + self.name + "\n"+ self.question
+                # self.sc.api_call("chat.postMessage", channel=self.slack_channel, text=response, as_user=True)
+                self.sc.api_call("chat.postMessage", channel=self.slack_channel, text=response)
+                while self.sc.server.connected is True:
+                    if self.responseTimer <= 0:
+                        raise chatTimeOut
+                    # pp.pprint(self.sc.rtm_read())
+                    newEvents = self.sc.rtm_read()
+                    pp.pprint(newEvents)
+                    for event in newEvents:
+                        pp.pprint(event)
+                        if "type" in event:
+                            if event['type'] == "message" and event['channel'] == self.slack_channel:
+                                if event['user'] != self.nagbot_user_id and "<@" + self.nagbot_user_id + ">" not in event['text']:
+                                    user_info = self.sc.api_call("users.info", user=event['user'])
+                                    #print(event['text'])
+                                    self.logger.info(event['text'])
+                                    answer = event['text']
+                                    response = response_option(self.answer, self.name, self.sc, self.slack_channel, self.nagbot_user_id, self.admin, self.responseTimer)
+                                    # slack_client.api_call("chat.postMessage", channel=event['channel'], text=response, as_user=True)
+                                    slack_client.api_call("chat.postMessage", channel=event['channel'], text=response)
+                                    return
+                            if event['type'] == "hello":
+                                print("GoodBye")
+                    time.sleep(1)
+                    self.responseTimer -=1
+                    print(self.responseTimer),
+            except chatTimeOut:
+                reply = self.admin + " User " + self.name + " has not replied to login alert in acceptable timeframe"
+                self.sc.api_call("chat.postMessage", channel=self.slack_channel, text=reply)
+                self.logger.debug("Chat Response TimeOut")
+            except chatEscalate:
+                pass
+                #  # This function defines what to do in the case of a negative response from a user. ie notify admin.
+                # reply = self.admin + " This is a test, " + self.name + "s login could NOT be confirmed !"
+                # self.sc.api_call("chat.postMessage", channel=self.slack_channel, text=reply, as_user=True)
+                # reply=" "
+                # return reply
+            except:
+                self.logger.info("Check QandA !")
         else:
-            # print "Connection Failed, invalid token?"
-            self.logger.error("Connection Failed, invalid token?")
+            self.logger.error("Connection Failed ?")
 
-
-    # def response_option(self, answer, name, slack_client, slack_channel, nagbot_user_id, admin, resp_time):
+    # def response_option(self, answer, name, slack_client, slack_channel, nagbot_user_id, admin, responseTimer):
     def response_option(self):
         # This function provides the actions based on user answers.
         if answer.lower() == "no":
-            # escalate(self.admin, self.name, self.slack_client, self.slack_channel)
+            # escalate(self.admin, self.name, self.sc, self.slack_channel)
             escalate()
         elif answer.lower() == "yes":
             reply = "Great carry on !"
             return reply
         else:
             self.question = "Not sure what you mean. Please answer yes or no."
-            # qanda(name, question, slack_client, slack_channel,nagbot_user_id, admin, resp_time)
-            qanda()
-
-    # def escalate(self, admin, name, slack_client, slack_channel):
-    def escalate(self):
-        # This function defines what to do in the case of a negative response from a user. ie notify admin.
-        reply = self.admin + " This is a test, " + self.name + "s login could NOT be confirmed !"
-        self.slack_client.api_call("chat.postMessage", channel=self.slack_channel, text=reply, as_user=True)
-        reply=" "
-        return reply
-        
-    # def time_out(self, admin, name, slack_client, slack_channel):
-    def time_out(self):
-        # This function defines what to do if the user does not respond in the allocated time.
-        reply = self.admin + " User " + self.name + " has not replied to login alert in acceptable timeframe"
-        self.slack_client.api_call("chat.postMessage", channel=self.slack_channel, text=reply, as_user=True)
-        reply=" "
-        return reply
+            # qanda(name, question, slack_client, slack_channel,nagbot_user_id, admin, responseTimer)
+            # qanda()

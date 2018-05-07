@@ -1,5 +1,3 @@
-#!/bin/env python 
-
 """ This is the main NAGBOT file where it will call the functions we write
     all your work should be done in your assigned function file and not here
     you don't need to understand this file - all you need to understand is 
@@ -8,6 +6,20 @@
     I (Hilton) will help you connect your function to the main app - again
     all you need to worry about is your own function.
 """
+
+'''
+        Reads from the RTM Websocket stream then calls `self.process_changes(item)` for each line
+        in the returned data.
+        Multiple events may be returned, always returns a list [], which is empty if there are no
+        incoming messages.
+        :Args:
+            None
+        :Returns:
+            data (json) - The server response. For example::
+                [{u'presence': u'active', u'type': u'presence_change', u'user': u'UABC1234'}]
+        :Raises:
+            SlackNotConnected if self.server is not defined.
+        '''
     
 import os
 import sqlite3
@@ -19,6 +31,7 @@ import logging
 from generate_random import generate_random
 # import team member functions
 from qanda import QandA # john
+# from qanda import qanda # john
 from createrules import createrules # bandr
 #from realert import realert # dustin
 from realert import ReAlert # dustin
@@ -57,15 +70,16 @@ slackChannel = os.getenv('NAGBOT_SLACK_CHANNEL', None)
 # Variables required by qanda function.
 nagbotUserId = os.getenv('NAGBOT_USER_ID', None) #slack nagbot as a user uid.
 slackClient = SlackClient(slackBotToken)
-userId = os.getenv('NAGBOT_TARGET_USER_ID', '<@U9JC2HE7R>') 
-adminId = os.getenv('NAGBOT_ADMIN_ID', '<@U9JC2HE7R>') 
-# name="<@U9JC2HE7R>"  # target user id as obtained from Elastalert.
-# admin="<@U9JC2HE7R>" #john assigned admin user on nagbot_live_here channel.
-#admin="<@U9HEUKN7P>" #dustin
-#admin="<@U9V7C7W31>" #bandr
-#admin="<@U029D6F2A>" #hilton
+userId = os.getenv('NAGBOT_TARGET_USER_ID', None) 
+adminId = os.getenv('NAGBOT_ADMIN_ID', '<@U9JC2HE7R>')
 question = "Have you just logged in from IP ADDRESS in LOCATION ? yes or no"
-resp_time = 30 # assigned time for user to respond in seconds.
+responseTime = 30 # assigned time for user to respond in seconds.
+print ("1. slackBotToken is {}".format(slackBotToken))
+print ("2. slackChannel is {}".format(slackChannel))
+print ("3. slackClient is {}".format(slackClient))
+print ("4. nagbotUserId is {}".format(nagbotUserId))
+print ("5. userId is {}".format(userId))
+print ("6. adminId is {}".format(adminId))
 
 # Exception Class
 class pidFileExists(Exception):
@@ -109,8 +123,10 @@ def hello():
 def run_qanda():
     # name, admin and slack_client are also required by escalate function. Not sure how to pass arguments from nagbot.py
     # have duplicated in qanda.py for now :john.
-    q = QandA(userId, question, slackClient, slackChannel, nagbotUserId, adminId, resp_time)
-    # print type(q)
+    # qanda(name, question, slack_client, slack_channel, nagbot_user_id, admin, resp_time)
+    # qanda(userId, question, slackClient, slackChannel, nagbotUserId, adminId, responseTime)
+    q = QandA(userId, question, slackClient, slackChannel, nagbotUserId, adminId, responseTime)
+    q.qanda()
     forward_message = "running qanda..."
     return render_template('index.html', message=forward_message);
 

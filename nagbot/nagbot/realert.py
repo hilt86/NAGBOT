@@ -13,6 +13,21 @@ class reAlertFailed(Exception):
 
 # Main Class
 class ReAlert:
+    '''
+    The SlackClient makes API Calls to the `Slack Web API <https://api.slack.com/web>`_ as well as
+    managing connections to the `Real-time Messaging API via websocket <https://api.slack.com/rtm>`_
+    It also manages some of the Client state for Channels that the associated token (User or Bot)
+    is associated with.
+    For more information, check out the `Slack API Docs <https://api.slack.com/>`_
+    Init:
+        :Args:
+            token (str): Your Slack Authentication token. You can find or generate a test token
+            `here <https://api.slack.com/docs/oauth-test-tokens>`_
+            Note: Be `careful with your token <https://api.slack.com/docs/oauth-safety>`_
+            proxies (dict): Proxies to use when create websocket or api calls,
+            declare http and websocket proxies using {'http': 'http://127.0.0.1'},
+            and https proxy using {'https': 'https://127.0.0.1:443'}
+    '''
     def __init__(self):
         self.logger = logging.getLogger('nagbot.realert.ReAlert')
         self.logger.info('creating an instance of ReAlert')
