@@ -61,3 +61,5 @@ target/
 .vscode/
 *.pid
 *.json
+*.tmp
+.~c9*

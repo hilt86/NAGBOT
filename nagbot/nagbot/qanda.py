@@ -20,19 +20,16 @@ class chatEscalate(Exception):
 # Main Class
 class QandA:
     '''
-    The SlackClient makes API Calls to the `Slack Web API <https://api.slack.com/web>`_ as well as
-    managing connections to the `Real-time Messaging API via websocket <https://api.slack.com/rtm>`_
-    It also manages some of the Client state for Channels that the associated token (User or Bot)
-    is associated with.
-    For more information, check out the `Slack API Docs <https://api.slack.com/>`_
+    QandA object that implements the Questioning and response questioning to the approrpriate User
+    
     Init:
         :Args:
-            token (str): Your Slack Authentication token. You can find or generate a test token
-            `here <https://api.slack.com/docs/oauth-test-tokens>`_
-            Note: Be `careful with your token <https://api.slack.com/docs/oauth-safety>`_
-            proxies (dict): Proxies to use when create websocket or api calls,
-            declare http and websocket proxies using {'http': 'http://127.0.0.1'},
-            and https proxy using {'https': 'https://127.0.0.1:443'}
+            name (str):
+            question (str):
+            slack_client (sc object):
+            slack_channel (str):
+            nagbot_user_id (str):
+            admin (str):
     '''
     def __init__(self, name, question, slack_client, slack_channel, nagbot_user_id, admin, responseTimer):
         self.logger = logging.getLogger('nagbot.qanda.QandA')
@@ -66,21 +63,30 @@ class QandA:
         
         # pp = pprint.PrettyPrinter(indent=4)
         
-        if self.sc.rtm_connect(with_team_state=False):
+        # if self.sc.rtm_connect(with_team_state=False):
+        if self.sc.rtm_connect():
             if self.sc.server.connected is True:
                 self.logger.info("NagBot connected and running!")
             try:
                 response = "Hi," + self.name + "\n"+ self.question
                 # self.sc.api_call("chat.postMessage", channel=self.slack_channel, text=response, as_user=True)
-                self.sc.api_call("chat.postMessage", channel=self.slack_channel, text=response)
+                # pp.pprint(self.sc.api_call("api.test"))
+                scResponse = self.sc.api_call("chat.postMessage", channel=self.slack_channel, text=response)
+                # print("scResponse is :{}".format(type(scResponse)))
+                # pp.pprint(scResponse)
+                # Check to see if the message sent successfully.
+                # If the message succeeded, `response["ok"]`` will be `True`
+                if scResponse["ok"] == True:
+                    print("Message posted successfully: " + scResponse["message"]["ts"])
+                    # If the message failed, check for rate limit headers in the response
                 while self.sc.server.connected is True:
                     if self.responseTimer <= 0:
                         raise chatTimeOut
                     # pp.pprint(self.sc.rtm_read())
                     newEvents = self.sc.rtm_read()
-                    pp.pprint(newEvents)
+                    pp.pprint(newEvents), 
                     for event in newEvents:
-                        pp.pprint(event)
+                        pp.pprint(event), 
                         if "type" in event:
                             if event['type'] == "message" and event['channel'] == self.slack_channel:
                                 if event['user'] != self.nagbot_user_id and "<@" + self.nagbot_user_id + ">" not in event['text']:
@@ -126,3 +132,12 @@ class QandA:
             self.question = "Not sure what you mean. Please answer yes or no."
             # qanda(name, question, slack_client, slack_channel,nagbot_user_id, admin, responseTimer)
             # qanda()
+            
+    # Simple wrapper for sending a Slack message
+    def send_slack_message(channel, message):
+        return sc.api_call(
+            "chat.postMessage",
+            channel=channel,
+            text=message
+        )
+            
