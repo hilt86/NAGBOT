@@ -52,9 +52,9 @@ console.setFormatter(formatter)
 logger.addHandler(console)
 
 # Variables required by qanda function.
-SLACK_BOT_TOKEN='xoxb-346474841542-DvCJe7SK4SzpRM7iEwtbhrLN'
+SLACK_BOT_TOKEN=os.environ["NAGBOT_SLACK_BOT_TOKEN"]
 slack_channel="CA69A9U8J" #slack nagbot_live_here channel id
-nagbot_user_id="UA6DYQRFY" #slack nagbot as a user uid.
+nagbot_user_id="UAMJZ591D" #slack nagbot as a user uid.
 # instantiate Slack client
 slack_client = SlackClient(SLACK_BOT_TOKEN)
 name="<@U9JC2HE7R>"  # target user id as obtained from Elastalert.
