@@ -1,21 +1,11 @@
 ## How to contribute to Nagbot
 
-### Coding standards
+### Coding Standards
 
-All code needs to be in git. If your code is not in git then it could or likely will be deleted when 
-the app is re-installed for testing.
-
-#### Which branch should I use?
-
-1. master is the branch used for live or production code and shouldn't contain untested code.
-2. testing is branched from develop and is used for testing. 
-3. develop is where we should be making changes
-
-Note: If you are not comfortable making changes in develop then you can create a branch for your personal use and merge 
-that into develop once you are happy with your changes.
-
-**Documentation usually don't affect the runnning of code and therefore I will update documentation in master
-since it is easy to find**
+1. If you are responsible for a function then you don't need to use git - you just need to be responsible for the file that your function resides in, i.e: qanda.py. 
+2. Dustin and Hilton will update the official github repo with your code
+3. Your function should **not** have a `if __name__ == "__main__"` section as this is handled by the main program. Functions accept an argument (either a simple data type such as a string or a more complex type like an object or list) and return data.
+4. Dustin and Hilton will use the testing and other branches to manage changes and test the code.
 
 #### Security
 
