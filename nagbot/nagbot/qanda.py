@@ -32,6 +32,41 @@ def qanda(name, question, slack_client, slack_channel, nagbot_user_id, admin, re
             resp_time -=1
     else:
         print "Connection Failed, invalid token?"
+        
+def askQuestion(name, question, slack_client, slack_channel, nagbot_user_id, admin, resp_time):
+    if slack_client.rtm_connect():
+        response = name + question
+        slack_client.api_call("chat.postMessage", channel=slack_channel, text=response, as_user=True)
+    else:
+        print "Connection Failed, invalid token?"
+    return
+
+def grabResponses(name, slack_client, slack_channel, nagbot_user_id ):
+    if slack_client.rtm_connect():
+        new_evts = slack_client.rtm_read()
+        time.sleep(5)
+        for evt in new_evts:
+            if "type" in evt:
+                if evt['type']=="message" and evt['channel']==slack_channel:
+                    answer=evt['text']
+    else:
+        print "Connection Failed, invalid token?"
+        
+def listUsers(name, question, slack_client, slack_channel, nagbot_user_id, admin, resp_time):
+    if slack_client.rtm_connect():
+        channel_list = requests.get('https://slack.com/api/channels.list?token=%s' % SLACK_API_TOKEN).json()['channels']
+        channel = filter(lambda c: c['name'] == CHANNEL_NAME, channel_list)[0]
+        channel_info = requests.get('https://slack.com/api/channels.info?token=%s&channel=%s' % (SLACK_API_TOKEN, channel['id'])).json()['channel']
+        members = channel_info['members']
+        users_list = requests.get('https://slack.com/api/users.list?token=%s' % SLACK_API_TOKEN).json()['members']
+        users = filter(lambda u: u['id'] in members, users_list)
+    
+    for user in users:
+        print(user['real_name'])
+        print(user['id'])
+    else:
+        print "Connection Failed, invalid token?"
+    return
 
 def response_option(answer, name, admin, slack_client, slack_channel, nagbot_user_id,resp_time):
     # This function provides the actions based on user answers.

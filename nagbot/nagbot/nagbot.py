@@ -18,7 +18,7 @@ import re
 import logging
 from generate_random import generate_random
 # import team member functions
-from qanda import qanda # john
+from qanda import * # john
 from createrules import createrules # bandr
 #from realert import realert # dustin
 from realert import ReAlert # dustin
@@ -100,7 +100,6 @@ def close_db(error):
         
 @app.route("/")
 def hello():
-    #return  "Hello team!" + " here is a random integer : "  + str(generate_random(1000))
     return render_template('index.html')
 
 @app.route("/qanda/", methods=['POST'])
@@ -110,6 +109,20 @@ def run_qanda():
     qanda(name, question, slack_client, slack_channel, nagbot_user_id, admin, resp_time)
     forward_message = "running qanda..."
     return render_template('index.html', message=forward_message);
+    
+@app.route("/askQuestion/", methods=['POST'])
+def run_ask():
+    # name, admin and slack_client are also required by escalate function. Not sure how to pass arguments from nagbot.py
+    # have duplicated in qanda.py for now :john.
+    askQuestion("<@U029D6F2A>", "what color are your socks?", slack_client, slack_channel, nagbot_user_id, admin, resp_time)
+    forward_message = "running askQuestion..."
+    return render_template('index.html', message=forward_message);
+    
+@app.route("/grabResponses/", methods=['POST'])
+def run_grabResponses():
+    respons = grabResponses("<@U029D6F2A>", slack_client, slack_channel, nagbot_user_id)
+    logger.info(respons)
+    return render_template('return.html', message=respons);
 
 # Test Code Entry Point
 @app.route('/api/json/z/', methods = ['POST'])
@@ -135,7 +148,7 @@ if __name__ == "__main__":
         
         # Start App
         app.run(host='0.0.0.0')
-        
+        logger.info("{} - loop test ... ".format(pid))
         # Clean Up
         # Remove PID File
         logger.info("{0} - Remove PID File : {1}".format(pid, pidfile))
