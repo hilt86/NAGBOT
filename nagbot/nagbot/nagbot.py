@@ -121,7 +121,6 @@ def run_ask():
 @app.route("/grabResponses/", methods=['POST'])
 def run_grabResponses():
     respons = grabResponses("<@U029D6F2A>", slack_client, slack_channel, nagbot_user_id)
-    logger.info(respons)
     return render_template('return.html', message=respons);
 
 # Test Code Entry Point

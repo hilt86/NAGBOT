@@ -43,12 +43,9 @@ def askQuestion(name, question, slack_client, slack_channel, nagbot_user_id, adm
 
 def grabResponses(name, slack_client, slack_channel, nagbot_user_id ):
     if slack_client.rtm_connect():
-        new_evts = slack_client.rtm_read()
-        time.sleep(5)
-        for evt in new_evts:
-            if "type" in evt:
-                if evt['type']=="message" and evt['channel']==slack_channel:
-                    answer=evt['text']
+        slack_client.api_call("chat.postMessage", channel=slack_channel, text="Hello from Python! :tada:",
+        user=name)
+        print "got here"
     else:
         print "Connection Failed, invalid token?"
         
