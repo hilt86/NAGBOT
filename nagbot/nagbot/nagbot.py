@@ -49,20 +49,25 @@ console = logging.StreamHandler()
 console.setLevel(logging.DEBUG)
 console.setFormatter(formatter)
 # add the handlers to the logger
-logger.addHandler(console)
+# logger.addHandler(console)
 
 # Variables required by qanda function.
-SLACK_BOT_TOKEN=os.environ["NAGBOT_SLACK_BOT_TOKEN"]
+SLACK_BOT_TOKEN = os.environ["NAGBOT_SLACK_BOT_TOKEN"]
 slack_channel="CA69A9U8J" #slack nagbot_live_here channel id
 nagbot_user_id="UAMJZ591D" #slack nagbot as a user uid.
 # instantiate Slack client
 slack_client = SlackClient(SLACK_BOT_TOKEN)
-name="<@U9JC2HE7R>"  # target user id as obtained from Elastalert.
-admin="<@U9JC2HE7R>" #john assigned admin user on nagbot_live_here channel.
-#admin="<@U9HEUKN7P>" #dustin
-#admin="<@U9V7C7W31>" #bandr
-#admin="<@U029D6F2A>" #hilton
-question = "Have you just logged in from IP ADDRESS in LOCATION ? yes or no"
+
+# logger.debug('SLACK_BOT_TOKEN is: {0}'.format(SLACK_BOT_TOKEN))
+
+
+
+user_id="U9JC2HE7R" #john assigned admin user on nagbot_live_here channel.
+# admin="U9HEUKN7P" #dustin
+# admin="U9V7C7W31" #bandr
+admin="U029D6F2A" #hilton
+#question = "Have you just logged in from "+ip_add+ "? yes or no"
+ip_add="12345"
 resp_time=30 # assigned time for user to respond in seconds.
 
 # Exception Class
@@ -106,7 +111,7 @@ def hello():
 def run_qanda():
     # name, admin and slack_client are also required by escalate function. Not sure how to pass arguments from nagbot.py
     # have duplicated in qanda.py for now :john.
-    qanda(name, question, slack_client, slack_channel, nagbot_user_id, admin, resp_time)
+    qanda(user_id, ip_add, slack_client, slack_channel, nagbot_user_id, admin, resp_time)
     forward_message = "running qanda..."
     return render_template('index.html', message=forward_message);
     
@@ -124,17 +129,30 @@ def run_grabResponses():
     return render_template('return.html', message=respons);
 
 # Test Code Entry Point
-@app.route('/api/json/z/', methods = ['POST'])
-def api_json_z():
+@app.route('/api/json/nagbot/', methods = ['POST'])
+def api_json_nagbot():
+    # Create ReAlert Object
     rxjs = ReAlert()
-    return rxjs.receiveJSON(request)
+    # Get Data being Sent
+    rxjsData = rxjs.receiveJSON(request)
+    # logger.debug("rxjsData - {}".format(rxjsData))
+    # logger.debug("rxjsData - User ID:{}".format(rxjsData[0]))
+    # logger.debug("rxjsData - IP Address:{}".format(rxjsData[1]))
+    # Write this Data to File
+    if rxjsData:
+        ip_add, user_id = rxjsData
+        logger.debug('User Id is: {0} IP Address is: {1}'.format(user_id, ip_add))
+        qanda(user_id, ip_add, slack_client, slack_channel, nagbot_user_id, admin, resp_time)
+        rxjs.writeJSONToFile(request.json)
+        
+    return rxjsData
 
 if __name__ == "__main__":
     # Lets make sure we only run this once.
     # Get PID of Application
     pid = str(os.getpid())
     # Location of File
-    pidfile = "./nagbot.pid"
+    pidfile = "nagbot.pid"
     
     try:
         # Check if File Exists i.e. we have something running already.
@@ -153,10 +171,10 @@ if __name__ == "__main__":
         logger.info("{0} - Remove PID File : {1}".format(pid, pidfile))
         os.unlink(pidfile)
     except pidFileExists:
-        logger.info("{} - Pid File Exists!, exiting ... ".format(pid))
+        logger.error("{} - Pid File Exists!, exiting ... ".format(pid))
         sys.exit(2)
-    except:
-        logger.info("{} - Something Broke".format(pid))
+    except Exception as e:
+        #except Exception as e: print(e)
+        logger.warning("{0} - {1}".format(pid,e))
     finally:
         logger.info("{} - Finished".format(pid))
-        
