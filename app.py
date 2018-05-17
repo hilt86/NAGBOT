@@ -42,7 +42,7 @@ app.config.from_object(__name__) # load config from this file , flaskr.py
 
 # setting silent to False will make the app complain if the environment
 # variable is not set
-app.config.from_envvar('NAGBOT_SETTINGS', silent=False)
+app.config.from_envvar('NAGBOT_SETTINGS', silent=True)
         
 # Helper for verifying that requests came from Slack
 def verify_slack_token(request_token):
