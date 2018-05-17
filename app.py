@@ -216,42 +216,5 @@ def api_json_nagbot():
         
 
 if __name__ == "__main__":
-    # Lets make sure we only run this once.
-    # Get PID of Application
-    pid = str(os.getpid())
-    # Location of File
-    pidfile = "nagbot.pid"
-    
-    # # Send a message with the above attachment, asking the user if they want coffee
-    # slack_client.api_call(
-    # "chat.postMessage",
-    # channel="#nagbotv3",
-    # text="Would you like some coffee? :coffee:",
-    # attachments=attachments_json
-    # ) 
-   
-    try:
-        # Check if File Exists i.e. we have something running already.
-        if os.path.isfile(pidfile):
-            raise pidFileExists
-        else:
-            # Generate PidFile
-            file(pidfile, 'w').write(pid)
-            logger.info("{0} - Started {1}".format(pid, "NagBOT"))
-        
-        # Start App
         port = int(os.environ.get("PORT", 5000))
         app.run(host='0.0.0.0')
-        logger.info("{} - loop test ... ".format(pid))
-        # Clean Up
-        # Remove PID File
-        logger.info("{0} - Remove PID File : {1}".format(pid, pidfile))
-        os.unlink(pidfile)
-    except pidFileExists:
-        logger.error("{} - Pid File Exists!, exiting ... ".format(pid))
-        sys.exit(2)
-    except Exception as e:
-        #except Exception as e: print(e)
-        logger.warning("{0} - {1}".format(pid,e))
-    finally:
-        logger.info("{} - Finished".format(pid))("{} - Finished".format(pid))
