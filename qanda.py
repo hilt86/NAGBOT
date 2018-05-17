@@ -21,6 +21,7 @@ def qanda(user_id, ip_add, slack_client, slack_channel, nagbot_user_id, admin, r
     name="<@"+user_id+">"
     admin_user="<@"+admin+">"
     question="At " + timestamp + " Have you just logged in from "+ip_add+" ? yes or no "
+    return question
    
         
 def askQuestion(name, question, slack_client, slack_channel, nagbot_user_id, admin, resp_time):
