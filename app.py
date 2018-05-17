@@ -47,7 +47,7 @@ def hello():
     slack_client.api_call(
     "chat.postMessage",
     channel="#nagbotv3",
-    text="Did you login from IP: ",
+    text=qanda(user_id, ip_add, timeStamp),
     attachments=attachments_json
     )
     return render_template('index.html')
