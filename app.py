@@ -28,6 +28,7 @@ user_id="U9JC2HE7R"
 admin="U029D6F2A" 
 ip_add="12345"
 resp_time=30
+timestamp = time.asctime( time.localtime(time.time()) )
 
 # Slack client for Web API requests
 slack_client = SlackClient(SLACK_BOT_TOKEN)
@@ -47,7 +48,7 @@ def hello():
     slack_client.api_call(
     "chat.postMessage",
     channel="#nagbotv3",
-    text=qanda(user_id, ip_add, timeStamp),
+    text=qanda(user_id, ip_add, timestamp),
     attachments=attachments_json
     )
     return render_template('index.html')
