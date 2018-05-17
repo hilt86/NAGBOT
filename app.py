@@ -1,12 +1,34 @@
-from flask import Flask, request, make_response, Response
+""" This is the main NAGBOT file where it will call the functions we write
+    all your work should be done in your assigned function file and not here
+    you don't need to understand this file - all you need to understand is
+    what your function needs to do.
+
+    I (Hilton) will help you connect your function to the main app - again
+    all you need to worry about is your own function.
+"""
+from flask import Flask, request, session, g, redirect, url_for, abort, render_template, flash, json, Response, jsonify, make_response
 import os
 import json
+import random
+import sys
+import time
+import re
+import logging
+from generate_random import generate_random
+from qanda import * 
+from realert import ReAlert 
 
 from slackclient import SlackClient
 
 # Your app's Slack bot user token
-SLACK_BOT_TOKEN = os.environ["SLACK_BOT_TOKEN"]
+SLACK_BOT_TOKEN =  os.environ["NAGBOT_SLACK_BOT_TOKEN"]
 SLACK_VERIFICATION_TOKEN = os.environ["SLACK_VERIFICATION_TOKEN"]
+slack_channel="CA69A9U8J" 
+nagbot_user_id="UAMJZ591D"
+user_id="U9JC2HE7R" 
+admin="U029D6F2A" 
+ip_add="12345"
+resp_time=30
 
 # Slack client for Web API requests
 slack_client = SlackClient(SLACK_BOT_TOKEN)
@@ -20,6 +42,35 @@ def verify_slack_token(request_token):
         print("Error: invalid verification token!")
         print("Received {} but was expecting {}".format(request_token, SLACK_VERIFICATION_TOKEN))
         return make_response("Request contains invalid Slack verification token", 403)
+
+@app.route("/")
+def hello():
+    slack_client.api_call(
+    "chat.postMessage",
+    channel="#nagbotv3",
+    text="Would you like some coffee? :coffee:",
+    attachments=attachments_json
+    )
+    return render_template('index.html')
+
+# Test Code Entry Point
+@app.route('/api/json/nagbot/', methods = ['POST'])
+def api_json_nagbot():
+    # Create ReAlert Object
+    rxjs = ReAlert()
+    # Get Data being Sent
+    rxjsData = rxjs.receiveJSON(request)
+    # Write this Data to File
+    if rxjsData:
+        ip_add, user_id, timeStamp = rxjsData
+        # datetimeObject = datetime.strptime(timeStamp, '%b %d %I:%M:%S') # This is for Debug - Not for Prod
+        # dO = addYears(datetimeObject, 118) # This is for Debug - Not for Prod
+        # logger.debug('{2}|{3} : User Id is: {0} IP Address is: {1}'.format(user_id, ip_add, timeStamp, dO)) # This is for Debug - Not for Prod
+        # qanda(user_id, ip_add, slack_client, slack_channel, nagbot_user_id, admin, resp_time, timeStamp)
+        rxjs.writeJSONToFile(request.json)
+        return make_response("", 200)
+    else:
+        return make_response("", 400)
 
 
 # The endpoint Slack will load your menu options from
