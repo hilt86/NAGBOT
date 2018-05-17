@@ -18,7 +18,6 @@ import re
 import logging
 # import team member functions
 from qanda import * # john
-from createrules import createrules # bandr
 #from realert import realert # dustin
 from realert import ReAlert # dustin
 # flask modules
@@ -27,82 +26,23 @@ from flask import Flask, request, session, g, redirect, url_for, abort, render_t
 from slackclient import SlackClient
 
 SLACK_VERIFICATION_TOKEN = os.environ["SLACK_VERIFICATION_TOKEN"]
-# For Debuggintg TimeStamps
-# Remove in Prod
-# from datetime import datetime
-# # import datetime
-# from datetime import date
-
-# def addYears(d, years):
-#     try:
-# #Return same day of the current year        
-#         return d.replace(year = d.year + years)
-#     except ValueError:
-# #If not same day, it will return other, i.e.  February 29 to March 1 etc.        
-#         return d + (date(d.year + years, 1, 1) - date(d.year, 1, 1))
-
-# Setup Logging
-# Create logger
-logger = logging.getLogger('nagbot')
-logger.setLevel(logging.DEBUG)
-
-# Create Formatter
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-
-# create file handler which logs even debug messages
-logfile = logging.FileHandler('nagbot.log')
-# This will take anything from DEBUG and Up
-logfile.setLevel(logging.DEBUG)
-logfile.setFormatter(formatter)
-# add the handlers to the logger
-logger.addHandler(logfile)
-
-# create console handler and set level to debug
-console = logging.StreamHandler()
-# This will take anything from DEBUG and Up
-console.setLevel(logging.DEBUG)
-console.setFormatter(formatter)
-# add the handlers to the logger
-logger.addHandler(console)
-
-# Variables required by qanda function.
 SLACK_BOT_TOKEN = os.environ["NAGBOT_SLACK_BOT_TOKEN"]
 slack_channel="CA69A9U8J" #slack nagbot_live_here channel id
 nagbot_user_id="UAMJZ591D" #slack nagbot as a user uid.
-# instantiate Slack client
 slack_client = SlackClient(SLACK_BOT_TOKEN)
 
-# logger.debug('SLACK_BOT_TOKEN is: {0}'.format(SLACK_BOT_TOKEN))
-
 user_id="U9JC2HE7R" #john assigned admin user on nagbot_live_here channel.
-# admin="U9HEUKN7P" #dustin
-# admin="U9V7C7W31" #bandr
 admin="U029D6F2A" #hilton
-#question = "Have you just logged in from "+ip_add+ "? yes or no"
 ip_add="12345"
 resp_time=30 # assigned time for user to respond in seconds.
-
-# Exception Class
-class pidFileExists(Exception):
-    pass
 
 # Start Flask Application
 app = Flask(__name__) # create the application instance :)
 app.config.from_object(__name__) # load config from this file , flaskr.py
 
-# Load default config and override config from an environment variable
-app.config.update(dict(
-    DATABASE=os.path.join(app.root_path , 'nagbot.db'),
-    SECRET_KEY='development key',
-    USERNAME='admin',
-    PASSWORD='default'
-))
-
 # setting silent to False will make the app complain if the environment
 # variable is not set
-app.config.from_envvar('NAGBOT_SETTINGS', silent=True)
-
-
+app.config.from_envvar('NAGBOT_SETTINGS', silent=False)
         
 # Helper for verifying that requests came from Slack
 def verify_slack_token(request_token):
