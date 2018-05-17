@@ -59,3 +59,6 @@ target/
 
 
 .vscode/
+
+.~c9*
+*.pid
