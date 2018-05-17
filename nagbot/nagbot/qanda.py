@@ -5,11 +5,11 @@ import logging
 # create logger
 # module_logger = logging.getLogger('nagbot.realert.qanda')
 
-logger = logging.getLogger('nagbot.realert.qanda')
-logger.info('QANDA')
+logger = logging.getLogger('nagbot.qanda')
+logger.info('qanda')
 
 
-def qanda(user_id, ip_add, slack_client, slack_channel, nagbot_user_id, admin, resp_time):
+def qanda(user_id, ip_add, slack_client, slack_channel, nagbot_user_id, admin, resp_time, timestamp="Timestamp Unknown"):
     """
     This function sends and retrieves responses from Slack as nagbot to assigned users.
     name is the name of the target user.
@@ -20,15 +20,15 @@ def qanda(user_id, ip_add, slack_client, slack_channel, nagbot_user_id, admin, r
     """
     name="<@"+user_id+">"
     admin_user="<@"+admin+">"
-    question="Have you just logged in from "+ip_add+" ? yes or no "
+    question="At " + timestamp + " Have you just logged in from "+ip_add+" ? yes or no "
     if slack_client.rtm_connect():
-        logger.debug('qanda')
-        print("NagBot connected and running!")
+        logger.debug('Connected to Slack ...')
+        # print("NagBot connected and running!")
         response = "Hi," + name + "\n"+ question
         slack_client.api_call("chat.postMessage", channel=slack_channel, text=response, as_user=True)
         while True & resp_time >= 0:
             if resp_time == 0:
-                time_out(admin_user, name, slack_client, slack_channel)
+                time_out(name, slack_client, ip_add)
                 return
             new_evts = slack_client.rtm_read()
             for evt in new_evts:
@@ -37,13 +37,13 @@ def qanda(user_id, ip_add, slack_client, slack_channel, nagbot_user_id, admin, r
                         if evt['user'] == user_id and evt['user'] != admin and "<@" + nagbot_user_id + ">" not in evt['text']:
                             user_info=slack_client.api_call("users.info", user=evt['user'])
                             answer=evt['text']
-                            response = response_option(answer, name, admin_user, slack_client, slack_channel, nagbot_user_id,resp_time)
+                            response = response_option(answer, name, admin, admin_user, slack_client, slack_channel, nagbot_user_id,resp_time,ip_add)
                             slack_client.api_call("chat.postMessage", channel=evt['channel'], text=response, as_user=True)
                             return
             time.sleep(1)
             resp_time -=1
     else:
-        print "Connection Failed, invalid token?"
+        # print "Connection Failed, invalid token?"
         logger.warning("Connection Failed, invalid token?")
         
 def askQuestion(name, question, slack_client, slack_channel, nagbot_user_id, admin, resp_time):
@@ -51,7 +51,7 @@ def askQuestion(name, question, slack_client, slack_channel, nagbot_user_id, adm
         response = name + question
         slack_client.api_call("chat.postMessage", channel=slack_channel, text=response, as_user=True)
     else:
-        print "Connection Failed, invalid token?"
+        # print "Connection Failed, invalid token?"
         logger.warning("Connection Failed, invalid token?")
     return
 
@@ -59,11 +59,11 @@ def grabResponses(name, slack_client, slack_channel, nagbot_user_id ):
     if slack_client.rtm_connect():
         slack_client.api_call("chat.postMessage", channel=slack_channel, text="Hello from Python! :tada:",
         user=name)
-        print "got here"
+        # print "got here"
         logger.debug("got here")
     else:
         logger.warning("Connection Failed, invalid token?")
-        print "Connection Failed, invalid token?"
+        # print "Connection Failed, invalid token?"
 """
  ? don't need this unless we want to dynamically retrieve user names from Slack.
  
@@ -84,10 +84,10 @@ def listUsers(name, question, slack_client, slack_channel, nagbot_user_id, admin
     return
 """
 
-def response_option(answer, name, admin_user, slack_client, slack_channel, nagbot_user_id,resp_time):
+def response_option(answer, name, admin, admin_user, slack_client, slack_channel, nagbot_user_id,resp_time, ip_add):
     # This function provides the actions based on user answers.
     if answer.lower() == "no":
-        escalate(name, slack_client, slack_channel)
+        escalate(name, slack_client, ip_add)
     elif answer.lower() == "yes":
         reply = "Great carry on !"
         return reply
@@ -95,16 +95,16 @@ def response_option(answer, name, admin_user, slack_client, slack_channel, nagbo
         question = "Not sure what you mean. Please answer yes or no."
         qanda(name, question, slack_client, slack_channel, nagbot_user_id, admin, resp_time)
 
-def escalate(name, slack_client, slack_channel):
+def escalate(name, slack_client, ip_add):
     logger.warning("Escalation Detected !")
     # This function defines what to do in the case of a negative response from a user. ie notify admin.
-    reply =  " This is a test, " + name + "s login requires attention !!!"
-    slack_client.api_call("chat.postMessage", channel=slack_channel, text=reply, as_user=True)
+    reply =  " This is a test, " + name + "s login from "+ip_add+" requires attention !!!"
+    slack_client.api_call("chat.postMessage", channel="CARFQNLQN", text=reply, as_user=True)
     reply=" "
     return reply
     
-def time_out(admin_user, name, slack_client, slack_channel):
+def time_out(name, slack_client, ip_add):
     # This function defines what to do if the user does not respond iin the allocated time.
-    reply = admin_user + " User " + name + " has not replied to login alert in acceptable timeframe"
-    slack_client.api_call("chat.postMessage", channel=slack_channel, text=reply, as_user=True)
+    reply = " User " + name + " has not replied to login from " +ip_add+" alert in acceptable timeframe"
+    slack_client.api_call("chat.postMessage", channel="CARFQNLQN", text=reply, as_user=True)
     return

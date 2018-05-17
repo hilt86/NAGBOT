@@ -1,5 +1,5 @@
 import logging
-from flask import json, jsonify
+from flask import json, jsonify, Response
 import qanda
 import json
 import pprint
@@ -54,7 +54,7 @@ class ReAlert:
                 return None
             # rtnData = str(json.dumps([jsonData["system"]["auth"]["ssh"]["ip"],jsonData["system"]["auth"]["user"]]))
             # rtnData = (json.dumps([jsonData["system"]["auth"]["ssh"]["ip"],jsonData["system"]["auth"]["user"]]))
-            rtnData = jsonData["system"]["auth"]["ssh"]["ip"],jsonData["system"]["auth"]["user"]
+            rtnData = jsonData["system"]["auth"]["ssh"]["ip"],jsonData["system"]["auth"]["user"],jsonData["system"]["auth"]["timestamp"]
             # pp.pprint(rtnData)
             self.logger.info("Receiving JSON Data - {}".format(rtnData))
             return rtnData
