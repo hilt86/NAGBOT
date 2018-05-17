@@ -9,7 +9,7 @@ logger = logging.getLogger('nagbot.qanda')
 logger.info('qanda')
 
 
-def qanda(user_id, ip_add, timestamp):
+def qanda(user_id, ip_add, timeStamp):
     """
     This function sends and retrieves responses from Slack as nagbot to assigned users.
     name is the name of the target user.
