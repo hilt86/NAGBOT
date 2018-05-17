@@ -16,7 +16,6 @@ import sys
 import time
 import re
 import logging
-from generate_random import generate_random
 # import team member functions
 from qanda import * # john
 from createrules import createrules # bandr
