@@ -14,7 +14,6 @@ import sys
 import time
 import re
 import logging
-from generate_random import generate_random
 from qanda import * 
 from realert import ReAlert 
 
