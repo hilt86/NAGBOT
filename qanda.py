@@ -19,7 +19,6 @@ def qanda(user_id, ip_add, timestamp):
     resp_time defines how long in sec a user has to respond befor admin is notified.
     """
     name="<@"+user_id+">"
-    admin_user="<@"+admin+">"
     question="Hi" + name + "\n At " + timestamp + " Have you just logged in from "+ip_add+" ? "
     return question
    
