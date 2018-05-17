@@ -1,1 +1,0 @@
-from .nagbot import app
