@@ -26,6 +26,19 @@ from realert import ReAlert # dustin
 from flask import Flask, request, session, g, redirect, url_for, abort, render_template, flash, json, Response, jsonify
 # slack modules
 from slackclient import SlackClient
+# For Debuggintg TimeStamps
+# Remove in Prod
+from datetime import datetime
+# import datetime
+from datetime import date
+
+def addYears(d, years):
+    try:
+#Return same day of the current year        
+        return d.replace(year = d.year + years)
+    except ValueError:
+#If not same day, it will return other, i.e.  February 29 to March 1 etc.        
+        return d + (date(d.year + years, 1, 1) - date(d.year, 1, 1))
 
 # Setup Logging
 # Create logger
@@ -49,7 +62,7 @@ console = logging.StreamHandler()
 console.setLevel(logging.DEBUG)
 console.setFormatter(formatter)
 # add the handlers to the logger
-# logger.addHandler(console)
+logger.addHandler(console)
 
 # Variables required by qanda function.
 SLACK_BOT_TOKEN = os.environ["NAGBOT_SLACK_BOT_TOKEN"]
@@ -135,17 +148,20 @@ def api_json_nagbot():
     rxjs = ReAlert()
     # Get Data being Sent
     rxjsData = rxjs.receiveJSON(request)
-    # logger.debug("rxjsData - {}".format(rxjsData))
-    # logger.debug("rxjsData - User ID:{}".format(rxjsData[0]))
-    # logger.debug("rxjsData - IP Address:{}".format(rxjsData[1]))
     # Write this Data to File
     if rxjsData:
-        ip_add, user_id = rxjsData
-        logger.debug('User Id is: {0} IP Address is: {1}'.format(user_id, ip_add))
-        qanda(user_id, ip_add, slack_client, slack_channel, nagbot_user_id, admin, resp_time)
+        ip_add, user_id, timeStamp = rxjsData
+        # datetimeObject = datetime.strptime(timeStamp, '%b %d %I:%M:%S') # This is for Debug - Not for Prod
+        # dO = addYears(datetimeObject, 118) # This is for Debug - Not for Prod
+        # logger.debug('{2}|{3} : User Id is: {0} IP Address is: {1}'.format(user_id, ip_add, timeStamp, dO)) # This is for Debug - Not for Prod
+        # qanda(user_id, ip_add, slack_client, slack_channel, nagbot_user_id, admin, resp_time, timeStamp)
         rxjs.writeJSONToFile(request.json)
-        
-    return rxjsData
+        return Response('OK', status=200)
+        # return 'OK'
+    else:
+        return Response('NOT OK', status=404)
+
+
 
 if __name__ == "__main__":
     # Lets make sure we only run this once.
@@ -177,4 +193,4 @@ if __name__ == "__main__":
         #except Exception as e: print(e)
         logger.warning("{0} - {1}".format(pid,e))
     finally:
-        logger.info("{} - Finished".format(pid))
+        logger.info("{} - Finished".format(pid))("{} - Finished".format(pid))
