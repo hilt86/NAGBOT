@@ -42,13 +42,13 @@ def grabResponses(name, slack_client, slack_channel, nagbot_user_id ):
         # print "Connection Failed, invalid token?"
 
 
-def escalate(name, slack_client, ip_add):
+def escalate(user_id, ip_add, slack_client):
     logger.warning("Escalation Detected !")
     # This function defines what to do in the case of a negative response from a user. ie notify admin.
+    name="<@"+user_id+">"
     reply =  " This is a test, " + name + "s login from "+ip_add+" requires attention !!!"
     slack_client.api_call("chat.postMessage", channel="CARFQNLQN", text=reply, as_user=True)
-    reply=" "
-    return reply
+    return
     
 def time_out(name, slack_client, ip_add):
     # This function defines what to do if the user does not respond iin the allocated time.
