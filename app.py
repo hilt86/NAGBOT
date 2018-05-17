@@ -21,7 +21,7 @@ from slackclient import SlackClient
 
 # Your app's Slack bot user token
 SLACK_BOT_TOKEN =  os.environ["NAGBOT_SLACK_BOT_TOKEN"]
-SLACK_VERIFICATION_TOKEN = os.environ["SLACK_VERIFICATION_TOKEN"]
+SLACK_VERIFICATION_TOKEN = os.environ["NAGBOT_SLACK_VERIFICATION_TOKEN"]
 slack_channel="CA69A9U8J" 
 nagbot_user_id="UAMJZ591D"
 user_id="U9JC2HE7R" 
@@ -47,7 +47,7 @@ def hello():
     slack_client.api_call(
     "chat.postMessage",
     channel="#nagbotv3",
-    text="Would you like some coffee? :coffee:",
+    text="Did you login from IP: ",
     attachments=attachments_json
     )
     return render_template('index.html')
@@ -147,14 +147,6 @@ attachments_json = [
         ]
     }
 ]
-
-# Send a message with the above attachment, asking the user if they want coffee
-slack_client.api_call(
-  "chat.postMessage",
-  channel="#python",
-  text="Did you just login from this IP : ",
-  attachments=attachments_json
-)
 
 # Start the Flask server
 if __name__ == "__main__":
