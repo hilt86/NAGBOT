@@ -22,7 +22,7 @@ from slackclient import SlackClient
 # Your app's Slack bot user token
 SLACK_BOT_TOKEN =  os.environ["NAGBOT_SLACK_BOT_TOKEN"]
 SLACK_VERIFICATION_TOKEN = os.environ["NAGBOT_SLACK_VERIFICATION_TOKEN"]
-slack_channel="CA69A9U8J" 
+slack_channel=os.environ["NAGBOT_SLACK_CHANNEL"]
 nagbot_user_id="UAMJZ591D"
 user_id="U9JC2HE7R" 
 admin="U029D6F2A" 
