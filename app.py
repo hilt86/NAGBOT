@@ -18,7 +18,7 @@ import logging
 from threading import *
 from qanda import * 
 from realert import ReAlert
-import pprint
+# import pprint
 
 from slackclient import SlackClient
 
@@ -47,7 +47,8 @@ slack_channel=os.environ["NAGBOT_SLACK_CHANNEL"]
 user_id= os.environ["NAGBOT_USER_ID"]
 escalate_channel=os.environ["NAGBOT_SLACK_ESCALATE_CHANNEL"]
 
-ip_add="12345"
+# Global Test Variables
+ip_add="1.1.1.1"
 secs=30
 timestamp = time.asctime( time.localtime(time.time()) )
 
