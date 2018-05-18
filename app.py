@@ -119,6 +119,7 @@ def message_actions():
         qanda.escalate(user_id, ip_add, slack_client, escalate_channel)
     else:
         message_text = "sorry to bother you!"
+        print("else ran")
 
     response = slack_client.api_call(
       "chat.update",
