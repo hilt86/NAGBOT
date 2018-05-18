@@ -63,7 +63,7 @@ class ReAlert:
             return rtnData
         else:
             self.logger.warning("Unsupported Media Type ;)")
-            print('### Unsupported Media Type ###;)
+            print('### Unsupported Media Type ###')
             return None
     
     def writeJSONToFile(self, dataJSON):
