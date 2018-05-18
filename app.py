@@ -116,7 +116,7 @@ def message_actions():
 
     if selection == "no":
         message_text = "ok, alerting secops"
-        qanda.escalate(user_id, ip_add, slack_client, escalate_channel)
+        escalate(user_id, ip_add, slack_client, escalate_channel)
     else:
         message_text = "sorry to bother you!"
         print("else ran")
