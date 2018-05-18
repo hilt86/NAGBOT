@@ -27,8 +27,8 @@ if os.environ.get('DEBUG'):
 else:
     logging.basicConfig(level=logging.INFO)
 
-# logger = logging.getLogger('nagbot')
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('nagbot')
+# logger = logging.getLogger(__name__)
 # logger.setLevel(logging.DEBUG)
 
 # Create Formatter
@@ -85,7 +85,7 @@ def api_json_nagbot():
     rxjs = ReAlert()
     # Get Data being Sent
     rxjsData = rxjs.receiveJSON(request)
-    print(rxjsData)
+    # print(rxjsData)
     # Write this Data to File
     if rxjsData:
         ip_add, user_id, timeStamp = rxjsData
