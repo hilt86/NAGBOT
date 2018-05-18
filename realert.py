@@ -40,8 +40,10 @@ class ReAlert:
         
     def receiveJSON(self, rxdataJSON):
         self.logger.debug('Receiving Data ...')
+        print('### Receiving Data ... ###')
         if rxdataJSON.headers['Content-Type'] == 'application/json':
             self.logger.debug('Receiving JSON Data ...')
+            print('### Receiving JSON Data ... ###')
             jsonData = rxdataJSON.json
             if jsonData["system"]["auth"]["ssh"]["ip"] and jsonData["system"]["auth"]["user"]:
                 elastalertData = str("JSON Data - User {0} Detected on IP - {1}".format(jsonData["system"]["auth"]["user"].upper(), jsonData["system"]["auth"]["ssh"]["ip"]))
@@ -51,6 +53,7 @@ class ReAlert:
                 pass
             else:
                 self.logger.info("JSON Data - Data No Detected")
+                print('### JSON Data - Data No Detected ###')
                 return None
             # rtnData = str(json.dumps([jsonData["system"]["auth"]["ssh"]["ip"],jsonData["system"]["auth"]["user"]]))
             # rtnData = (json.dumps([jsonData["system"]["auth"]["ssh"]["ip"],jsonData["system"]["auth"]["user"]]))
@@ -60,6 +63,7 @@ class ReAlert:
             return rtnData
         else:
             self.logger.warning("Unsupported Media Type ;)")
+            print('### Unsupported Media Type ###;)
             return None
     
     def writeJSONToFile(self, dataJSON):
