@@ -90,9 +90,9 @@ def api_json_nagbot():
         # qanda(user_id, ip_add, slack_client, slack_channel, nagbot_user_id, admin, resp_time, timeStamp)
         # rxjs.writeJSONToFile(request.json)
         message_actions()
-        return make_response("", 200)
+        return make_response("JSON OK", 200)
     else:
-        return make_response("", 400)
+        return make_response("JSON BAD", 400)
 
 
 # The endpoint Slack will load your menu options from

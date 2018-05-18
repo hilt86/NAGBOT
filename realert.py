@@ -28,10 +28,10 @@ class ReAlert:
         self.logger = logging.getLogger('nagbot.realert.ReAlert')
         self.logger.info('Creating an instance of ReAlert')
 
-    def do_something(self):
-        self.logger.info('ReAlert is doing something')
-        a = 1 + 1
-        self.logger.info('ReAlert has done something')
+    # def do_something(self):
+    #     self.logger.info('ReAlert is doing something')
+    #     a = 1 + 1
+    #     self.logger.info('ReAlert has done something')
         
     def sendQanda(self, question):
         self.logger.info('Sending Data ...')
@@ -60,7 +60,7 @@ class ReAlert:
             # rtnData = (json.dumps([jsonData["system"]["auth"]["ssh"]["ip"],jsonData["system"]["auth"]["user"]]))
             rtnData = jsonData["system"]["auth"]["ssh"]["ip"],jsonData["system"]["auth"]["user"],jsonData["system"]["auth"]["timestamp"]
             # pp.pprint(rtnData)
-            self.logger.info("Receiving JSON Data - {}".format(rtnData))
+            # self.logger.info("Receiving JSON Data - {}".format(rtnData))
             return rtnData
         else:
             self.logger.warning("Unsupported Media Type ;)")
