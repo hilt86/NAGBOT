@@ -116,7 +116,7 @@ def message_actions():
 
     if selection == "no":
         message_text = "ok, alerting secops"
-        escalate(user_id, ip_add, slack_client)
+        escalate(user_id, ip_add, slack_client, escalate_channel)
     else:
         message_text = "sorry to bother you!"
 
