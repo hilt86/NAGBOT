@@ -26,7 +26,7 @@ class ReAlert:
     '''
     def __init__(self):
         self.logger = logging.getLogger('nagbot.realert.ReAlert')
-        self.logger.info('Creating an instance of ReAlert')
+        self.logger.debug('Creating an instance of ReAlert')
 
     # def do_something(self):
     #     self.logger.info('ReAlert is doing something')
@@ -34,11 +34,13 @@ class ReAlert:
     #     self.logger.info('ReAlert has done something')
         
     def sendQanda(self, question):
+        self.logger = logging.getLogger('nagbot.realert.ReAlert.sendQanda')
         self.logger.info('Sending Data ...')
         # qanda(name, question, slack_client, slack_channel, nagbot_user_id, admin, resp_time):
         # qanda.qanda("<@U9JC2HE7R>", question, SlackClient(nagbotSlackBotToken), "CA69A9U8J", "UAMJZ591D", "<@U9JC2HE7R>", 60)
         
     def receiveJSON(self, rxdataJSON):
+        self.logger = logging.getLogger('nagbot.realert.ReAlert.receiveJSON')
         self.logger.debug('Receiving Data ...')
         # print('### Receiving Data ... ###')
         if rxdataJSON.headers['Content-Type'] == 'application/json':
@@ -68,6 +70,7 @@ class ReAlert:
             return None
     
     def writeJSONToFile(self, dataJSON):
+        self.logger = logging.getLogger('nagbot.realert.ReAlert.writeJSONToFile')
         self.logger.info('Writing JSON Data to File ...')
         data = json.dumps(dataJSON)
         with open("nagbot.json","a") as f:

@@ -83,13 +83,14 @@ def api_json_nagbot():
     rxjs = ReAlert()
     # Get Data being Sent
     rxjsData = rxjs.receiveJSON(request)
+    print(rxjsData)
     # Write this Data to File
     if rxjsData:
         ip_add, user_id, timeStamp = rxjsData
         logger.debug("IP Address: {0} User Id: {1} timeStamp: {2}".format(ip_add, user_id, timeStamp))
         # qanda(user_id, ip_add, slack_client, slack_channel, nagbot_user_id, admin, resp_time, timeStamp)
         # rxjs.writeJSONToFile(request.json)
-        message_actions()
+        # message_actions()
         return make_response("JSON OK", 200)
     else:
         return make_response("JSON BAD", 400)
