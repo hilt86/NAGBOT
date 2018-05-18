@@ -22,7 +22,22 @@ import pprint
 
 from slackclient import SlackClient
 
-pp = pprint.PrettyPrinter(indent=4)
+# pp = pprint.PrettyPrinter(indent=4)
+
+# Setup Logging on the console
+# Create logger
+logger = logging.getLogger('nagbot')
+logger.setLevel(logging.DEBUG)
+
+# Create Formatter
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+# create console handler and set level to debug
+console = logging.StreamHandler()
+# This will take anything from DEBUG and Up
+console.setLevel(logging.DEBUG)
+console.setFormatter(formatter)
+# add the handlers to the logger
+logger.addHandler(console)
 
 # Your app's Slack bot user token
 SLACK_BOT_TOKEN =  os.environ["NAGBOT_SLACK_BOT_TOKEN"]
