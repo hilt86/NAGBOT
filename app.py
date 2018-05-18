@@ -22,12 +22,14 @@ from realert import ReAlert
 
 from slackclient import SlackClient
 
-# pp = pprint.PrettyPrinter(indent=4)
+if os.environ.get('DEBUG'):
+    logging.basicConfig(level=logging.DEBUG)
+else:
+    logging.basicConfig(level=logging.INFO)
 
-# Setup Logging on the console
-# Create logger
-logger = logging.getLogger('nagbot')
-logger.setLevel(logging.DEBUG)
+# logger = logging.getLogger('nagbot')
+logger = logging.getLogger(__name__)
+# logger.setLevel(logging.DEBUG)
 
 # Create Formatter
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')

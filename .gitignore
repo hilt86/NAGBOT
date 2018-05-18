@@ -62,3 +62,5 @@ target/
 
 .~c9*
 *.pid
+# Config File for Dev
+config.py
