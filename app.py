@@ -15,9 +15,12 @@ import time
 import re
 import logging
 from qanda import * 
-from realert import ReAlert 
+from realert import ReAlert
+import pprint
 
 from slackclient import SlackClient
+
+pp = pprint.PrettyPrinter(indent=4)
 
 # Your app's Slack bot user token
 SLACK_BOT_TOKEN =  os.environ["NAGBOT_SLACK_BOT_TOKEN"]
@@ -114,7 +117,7 @@ def message_actions():
     # Check to see what the user's selection was and update the message accordingly
     selection = form_json["actions"][0]["selected_options"][0]["value"]
     # print "Selection is : {}".format(str(selection)[0:-1])
-    print "Selection is : {}".format(str(*selection))
+    print "Selection is : {}".format(pp.pprint(selection))
     
     if selection == "no":
         message_text = "ok, alerting secops"
