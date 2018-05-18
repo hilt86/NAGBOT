@@ -48,7 +48,7 @@ def verify_slack_token(request_token):
 def hello():
     slack_client.api_call(
     "chat.postMessage",
-    channel="#nagbotv3",
+    channel=user_id,
     text=qanda(user_id, ip_add, timestamp),
     attachments=attachments_json
     )
