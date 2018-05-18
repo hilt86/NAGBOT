@@ -18,11 +18,13 @@ def qanda(user_id, ip_add, timestamp):
     slack_channel and nagbot_user are the channel and bot user id's.
     resp_time defines how long in sec a user has to respond befor admin is notified.
     """
+    print("### Qanda ran ###")
     name="<@"+user_id+">"
     question="Hi" + name + "\n At " + timestamp + " Have you just logged in from "+ip_add+" ? "
     return question
 
 def escalate(user_id, ip_add, slack_client, escalate_channel):
+    print("### Escalate ran ###")
     logger.warning("Escalation Detected !")
     # This function defines what to do in the case of a negative response from a user. ie notify admin.
     name="<@"+user_id+">"
