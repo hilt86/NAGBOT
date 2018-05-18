@@ -23,9 +23,10 @@ from slackclient import SlackClient
 SLACK_BOT_TOKEN =  os.environ["NAGBOT_SLACK_BOT_TOKEN"]
 SLACK_VERIFICATION_TOKEN = os.environ["NAGBOT_SLACK_VERIFICATION_TOKEN"]
 slack_channel=os.environ["NAGBOT_SLACK_CHANNEL"]
-nagbot_user_id="UAMJZ591D"
-user_id="U9JC2HE7R" 
-admin="U029D6F2A" 
+
+user_id= os.environ["NAGBOT_USER_ID"]
+escalate_channel=os.environ["NAGBOT_SLACK_ESCALATE_CHANNEL"]
+
 ip_add="12345"
 resp_time=30
 timestamp = time.asctime( time.localtime(time.time()) )
