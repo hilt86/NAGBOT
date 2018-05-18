@@ -12,8 +12,10 @@ import json
 import random
 import sys
 import time
+import threading
 import re
 import logging
+from threading import *
 from qanda import * 
 from realert import ReAlert
 import pprint
@@ -31,7 +33,7 @@ user_id= os.environ["NAGBOT_USER_ID"]
 escalate_channel=os.environ["NAGBOT_SLACK_ESCALATE_CHANNEL"]
 
 ip_add="12345"
-resp_time=30
+secs=30
 timestamp = time.asctime( time.localtime(time.time()) )
 
 # Slack client for Web API requests
@@ -55,6 +57,7 @@ def hello():
     text=qanda(user_id, ip_add, timestamp),
     attachments=attachments_json
     )
+    response_timer(secs,user_id, ip_add, slack_client, escalate_channel)
     return render_template('index.html')
 
 # Test Code Entry Point
@@ -118,7 +121,7 @@ def message_actions():
     selection = form_json["actions"][0]["selected_options"][0]["value"]
     # print "Selection is : {}".format(str(selection)[0:-1])
     # print "Selection is : {}".format(pp.pprint(selection))
-    
+    stopper()
     if selection == "no":
         message_text = "ok, alerting secops"
         escalate(user_id, ip_add, slack_client, escalate_channel)
