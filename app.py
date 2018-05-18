@@ -113,12 +113,13 @@ def message_actions():
 
     # Check to see what the user's selection was and update the message accordingly
     selection = form_json["actions"][0]["selected_options"][0]["value"]
-
+    print "Selection is : {}".format(selection)
     if selection == "no":
         message_text = "ok, alerting secops"
-        
-    else:
+    elif selection == "yes":
         message_text = "sorry to bother you!"
+    else:
+        message_text = "something is wrong"
 
     response = slack_client.api_call(
       "chat.update",
