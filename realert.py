@@ -48,6 +48,7 @@ class ReAlert:
             if jsonData["system"]["auth"]["ssh"]["ip"] and jsonData["system"]["auth"]["user"]:
                 elastalertData = str("JSON Data - User {0} Detected on IP - {1}".format(jsonData["system"]["auth"]["user"].upper(), jsonData["system"]["auth"]["ssh"]["ip"]))
                 self.logger.info(elastalertData)
+                print(elastalertData)
                 # self.logger.info("JSON Data - User {0} Detected on IP - {1}".format(jsonData["system"]["auth"]["user"], jsonData["system"]["auth"]["ssh"]["ip"]))
                 #self.sendQanda(str("Hello, " + jsonData["system"]["auth"]["user"].capitalize() + " did you login from " + jsonData["system"]["auth"]["ssh"]["ip"]))
                 pass
