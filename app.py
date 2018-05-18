@@ -12,10 +12,10 @@ import json
 import random
 import sys
 import time
-import threading
+# import threading
+# from threading import *
 import re
 import logging
-from threading import *
 from qanda import * 
 from realert import ReAlert
 # import pprint
@@ -61,8 +61,8 @@ app = Flask(__name__)
 # Helper for verifying that requests came from Slack
 def verify_slack_token(request_token):
     if SLACK_VERIFICATION_TOKEN != request_token:
-        print("Error: invalid verification token!")
-        print("Received {} but was expecting {}".format(request_token, SLACK_VERIFICATION_TOKEN))
+        logger.warning("Error: invalid verification token!")
+        logger.warning("Received {} but was expecting {}".format(request_token, SLACK_VERIFICATION_TOKEN))
         return make_response("Request contains invalid Slack verification token", 403)
 
 @app.route("/")
@@ -86,11 +86,9 @@ def api_json_nagbot():
     # Write this Data to File
     if rxjsData:
         ip_add, user_id, timeStamp = rxjsData
-        # datetimeObject = datetime.strptime(timeStamp, '%b %d %I:%M:%S') # This is for Debug - Not for Prod
-        # dO = addYears(datetimeObject, 118) # This is for Debug - Not for Prod
-        # logger.debug('{2}|{3} : User Id is: {0} IP Address is: {1}'.format(user_id, ip_add, timeStamp, dO)) # This is for Debug - Not for Prod
+        logger.debug("IP Address: {0} User Id: {1} timeStamp: {2}".format(ip_add, user_id, timeStamp))
         # qanda(user_id, ip_add, slack_client, slack_channel, nagbot_user_id, admin, resp_time, timeStamp)
-        rxjs.writeJSONToFile(request.json)
+        # rxjs.writeJSONToFile(request.json)
         return make_response("", 200)
     else:
         return make_response("", 400)
@@ -134,9 +132,7 @@ def message_actions():
     verify_slack_token(form_json["token"])
 
     # Check to see what the user's selection was and update the message accordingly
-    selection = form_json["actions"][0]["selected_options"][0]["value"]
-    # print "Selection is : {}".format(str(selection)[0:-1])
-    # print "Selection is : {}".format(pp.pprint(selection))
+    selection = form_json["actions"][0]["selected_options"][0]["value"]    
     stopper()
     if selection == "no":
         message_text = "ok, alerting secops"

@@ -1,7 +1,7 @@
 import time
 import logging
 import threading
-from threading import *
+from threading import Timer
 
 # create logger
 # module_logger = logging.getLogger('nagbot.realert.qanda')
@@ -20,7 +20,7 @@ def qanda(user_id, ip_add, timestamp):
     resp_time defines how long in sec a user has to respond befor admin is notified.
     """
     # print("### Qanda ran ###")
-    logger.debug("### Qanda ran ###")
+    logger.debug("Qanda Running")
     name="<@"+user_id+">"
     question="Hi" + name + "\n At " + timestamp + " Have you just logged in from "+ip_add+" ? "
     return question
@@ -49,9 +49,8 @@ def stopper():
     return
     
 def time_out(user_id, ip_add, slack_client, escalate_channel):
-    # print("### Time out ran ###")
-    logger.warning("### Time out ran ###")
-    # logger.warning("Timeout Detected !")
+    # print("### Time out ran ###")    
+    logger.warning("Timeout Detected !")
     # This function defines what to do in the case of a negative response from a user. ie notify admin.
     name="<@"+user_id+">"
     reply =  " This is a test, " + name + "s login from "+ip_add+" has not responded in required time interval!!!"
