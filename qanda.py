@@ -21,37 +21,12 @@ def qanda(user_id, ip_add, timestamp):
     name="<@"+user_id+">"
     question="Hi" + name + "\n At " + timestamp + " Have you just logged in from "+ip_add+" ? "
     return question
-   
-        
-def askQuestion(name, question, slack_client, slack_channel, nagbot_user_id, admin, resp_time):
-    if slack_client.rtm_connect():
-        response = name + question
-    else:
-        # print "Connection Failed, invalid token?"
-        logger.warning("Connection Failed, invalid token?")
-    return
 
-def grabResponses(name, slack_client, slack_channel, nagbot_user_id ):
-    if slack_client.rtm_connect():
-        slack_client.api_call("chat.postMessage", channel=slack_channel, text="Hello from Python! :tada:",
-        user=name)
-        # print "got here"
-        logger.debug("got here")
-    else:
-        logger.warning("Connection Failed, invalid token?")
-        # print "Connection Failed, invalid token?"
-
-
-def escalate(user_id, ip_add, slack_client):
+def escalate(user_id, ip_add, slack_client, escalate_channel):
     logger.warning("Escalation Detected !")
     # This function defines what to do in the case of a negative response from a user. ie notify admin.
     name="<@"+user_id+">"
     reply =  " This is a test, " + name + "s login from "+ip_add+" requires attention !!!"
-    slack_client.api_call("chat.postMessage", channel="CARFQNLQN", text=reply, as_user=True)
+    slack_client.api_call("chat.postMessage", channel=escalate_channel, text=reply, as_user=True)
     return
     
-def time_out(name, slack_client, ip_add):
-    # This function defines what to do if the user does not respond iin the allocated time.
-    reply = " User " + name + " has not replied to login from " +ip_add+" alert in acceptable timeframe"
-    slack_client.api_call("chat.postMessage", channel="CARFQNLQN", text=reply, as_user=True)
-    return
