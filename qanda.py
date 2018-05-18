@@ -43,7 +43,7 @@ def response_timer(secs,user_id, ip_add, slack_client, escalate_channel):
         
 # If user responds stop the timer  
 def stopper():
-    t.cancel()
+    # t.cancel()
     #  print "stopped"
     logger.info("Timer stopped")
     return
