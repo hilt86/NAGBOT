@@ -64,3 +64,4 @@ target/
 *.pid
 # Config File for Dev
 config.py
+*.swp

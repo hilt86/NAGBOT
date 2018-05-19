@@ -10,7 +10,7 @@ logger = logging.getLogger('nagbot.qanda')
 logger.info('qanda')
 
 def test(user_id, ip_add):
-    logger.debug("qanda.test ran")
+    logger.debug("qanda.test received : " + user_id + " and " + ip_add)
 
 
 def qanda(user_id, ip_add, timestamp):
