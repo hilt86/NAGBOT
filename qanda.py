@@ -60,7 +60,7 @@ def escalate(user_id, ip_add, slack_client, escalate_channel):
     logger.warning("Escalation Detected !")
     # This function defines what to do in the case of a negative response from a user. ie notify admin.
     name="<@"+user_id+">"
-    reply =  " This is a test, " + name + "s login from "+ip_add+" requires attention !!!"
+    reply =  "SECURITY ALERT : " + "There has been a suspicious login using " + name + "'s " + "credential"
     slack_client.api_call("chat.postMessage", channel=escalate_channel, text=reply, as_user=True)
     return
 
