@@ -1,10 +1,31 @@
 import time
+import os
+from slackclient import SlackClient
 import logging
 import threading
 from threading import Timer
 
 # create logger
 # module_logger = logging.getLogger('nagbot.realert.qanda')
+
+SLACK_BOT_TOKEN =  os.environ["NAGBOT_SLACK_BOT_TOKEN"]
+slack_client = SlackClient(SLACK_BOT_TOKEN)
+test_attachments_json = [
+    {
+        "fallback": "Upgrade your Slack client to use messages like these.",
+        "color": "#3AA3E3",
+        "attachment_type": "default",
+        "callback_id": "menu_options_2319",
+        "actions": [
+            {
+                "name": "response_list",
+                "text": "choose your response...",
+                "type": "select",
+                "data_source": "external"
+            }
+        ]
+    }
+]
 
 logger = logging.getLogger('nagbot.qanda')
 logger.info('qanda')
@@ -15,7 +36,7 @@ def test(user_id, ip_add):
     "chat.postMessage",
     channel=user_id,
     text=("Hey " + user_id + " did you just login from " + ip_add + " ?"),
-    attachments=attachments_json
+    attachments=test_attachments_json
     )
 
 
