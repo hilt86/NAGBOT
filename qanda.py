@@ -9,6 +9,9 @@ from threading import Timer
 logger = logging.getLogger('nagbot.qanda')
 logger.info('qanda')
 
+def test(user_id, ip_add):
+    logger.debug("qanda.test ran")
+
 
 def qanda(user_id, ip_add, timestamp):
     """
