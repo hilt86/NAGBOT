@@ -138,7 +138,7 @@ def message_actions():
 
     # Check to see what the user's selection was and update the message accordingly
     selection = form_json["actions"][0]["selected_options"][0]["value"]    
-    response_user = form_json["user"][0]["id"][0]["value"]    
+    response_user = form_json["user"]["id"]["value"]    
     stopper()
     if selection == "no":
         message_text = "ok, alerting secops"
