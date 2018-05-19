@@ -11,6 +11,12 @@ logger.info('qanda')
 
 def test(user_id, ip_add):
     logger.debug("qanda.test received : " + user_id + " and " + ip_add)
+    slack_client.api_call(
+    "chat.postMessage",
+    channel=user_id,
+    text=("Hey " + user_id + " did you just login from " + ip_add + " ?"),
+    attachments=attachments_json
+    )
 
 
 def qanda(user_id, ip_add, timestamp):
