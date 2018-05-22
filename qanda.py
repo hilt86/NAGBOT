@@ -46,6 +46,7 @@ def qanda(user_id, ip_add):
     text=("Hey " + user_id + " did you just login from " + ip_add + " ?"),
     attachments=test_attachments_json
     )
+    response_timer(secs,user_id, ip_add, slack_client, escalate_channel)
 
 def escalate(user_id, ip_add, slack_client, escalate_channel):
     # print("### Escalate ran ###")
