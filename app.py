@@ -69,6 +69,10 @@ def verify_slack_token(request_token):
         logger.warning("Received {} but was expecting {}".format(request_token, SLACK_VERIFICATION_TOKEN))
         return make_response("Request contains invalid Slack verification token", 403)
 
+@app.route('/')
+def run_background():
+    my_background_task.apply_async(args=[10, 20], countdown=60)
+    return make_response("JOB OK", 200)
 
 
 # Test Code Entry Point
