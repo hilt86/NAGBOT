@@ -50,7 +50,7 @@ escalate_channel=os.environ["NAGBOT_SLACK_ESCALATE_CHANNEL"]
 
 # Global Test Variables
 ip_add="1.1.1.1"
-secs=30
+timeout_secs=30
 
 
 # Slack client for Web API requests
