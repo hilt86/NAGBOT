@@ -67,16 +67,6 @@ def verify_slack_token(request_token):
         logger.warning("Received {} but was expecting {}".format(request_token, SLACK_VERIFICATION_TOKEN))
         return make_response("Request contains invalid Slack verification token", 403)
 
-@app.route("/")
-def hello():
-    slack_client.api_call(
-    "chat.postMessage",
-    channel=user_id,
-    text=qanda(user_id, ip_add),
-    attachments=attachments_json
-    )
-    
-    return render_template('index.html')
 
 # Test Code Entry Point
 @app.route('/api/json/nagbot/', methods = ['POST'])
