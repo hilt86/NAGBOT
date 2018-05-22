@@ -75,7 +75,7 @@ def hello():
     text=qanda(user_id, ip_add),
     attachments=attachments_json
     )
-    response_timer(secs,user_id, ip_add, slack_client, escalate_channel)
+    
     return render_template('index.html')
 
 # Test Code Entry Point
@@ -92,6 +92,7 @@ def api_json_nagbot():
         logger.debug("IP Address: {0} User Id: {1} timeStamp: {2}".format(ip_add, user_id, timeStamp))
         # qanda(user_id, ip_add, slack_client, slack_channel, nagbot_user_id, admin, resp_time, timeStamp)
         qanda(user_id, ip_add)
+        response_timer(secs,user_id, ip_add, slack_client, escalate_channel)
         # rxjs.writeJSONToFile(request.json)
         # message_actions()
         return make_response("JSON OK", 200)
