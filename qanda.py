@@ -62,7 +62,7 @@ def start_response_timer(timeout_secs,user_id, ip_add, slack_client, escalate_ch
     t=threading.Timer(timeout_secs,time_out(user_id, ip_add, slack_client, escalate_channel))
     print("###Timer Started ###")
     # Start the timer
-    t.start()
+    t.start(timeout_secs)
     return
         
 # If user responds stop the timer  
