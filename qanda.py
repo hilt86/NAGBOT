@@ -46,7 +46,7 @@ def qanda(user_id, ip_add):
     text=("Hey " + user_id + " did you just login from " + ip_add + " ?"),
     attachments=test_attachments_json
     )
-    response_timer(secs,user_id, ip_add, slack_client, escalate_channel)
+    
 
 def escalate(user_id, ip_add, slack_client, escalate_channel):
     # print("### Escalate ran ###")
@@ -57,7 +57,7 @@ def escalate(user_id, ip_add, slack_client, escalate_channel):
     slack_client.api_call("chat.postMessage", channel=escalate_channel, text=reply, as_user=True)
     return
 
-def response_timer(secs,user_id, ip_add, slack_client, escalate_channel):
+def start_response_timer(secs,user_id, ip_add, slack_client, escalate_channel):
 # If timer is exceeded escalate to secops
     t=threading.Timer(secs,time_out(user_id, ip_add, slack_client, escalate_channel))
     # Start the timer
