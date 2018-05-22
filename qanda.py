@@ -59,6 +59,7 @@ def escalate(user_id, ip_add, slack_client, escalate_channel):
 
 def start_response_timer(timeout_secs,user_id, ip_add, slack_client, escalate_channel):
 # If timer is exceeded escalate to secops
+    print("Passed timeout interval" + timeout_secs)
     t=threading.Timer(timeout_secs,time_out(user_id, ip_add, slack_client, escalate_channel))
     print("###Timer Started ###")
     # Start the timer
