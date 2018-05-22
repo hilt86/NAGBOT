@@ -57,9 +57,9 @@ def escalate(user_id, ip_add, slack_client, escalate_channel):
     slack_client.api_call("chat.postMessage", channel=escalate_channel, text=reply, as_user=True)
     return
 
-def start_response_timer(secs,user_id, ip_add, slack_client, escalate_channel):
+def start_response_timer(timeout_secs,user_id, ip_add, slack_client, escalate_channel):
 # If timer is exceeded escalate to secops
-    t=threading.Timer(secs,time_out(user_id, ip_add, slack_client, escalate_channel))
+    t=threading.Timer(timeout_secs,time_out(user_id, ip_add, slack_client, escalate_channel))
     # Start the timer
     t.start()
     return
