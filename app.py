@@ -71,7 +71,7 @@ def verify_slack_token(request_token):
 
 @app.route('/')
 def run_background():
-    my_background_task.apply_async(args=[10, 20], countdown=60)
+    my_background_task.apply_async(args=[10, 20], countdown=7)
     return make_response("JOB OK", 200)
 
 
