@@ -52,7 +52,7 @@ escalate_channel=os.environ["NAGBOT_SLACK_ESCALATE_CHANNEL"]
 # Global Test Variables
 ip_add="1.1.1.1"
 secs=30
-timestamp = time.asctime( time.localtime(time.time()) )
+
 
 # Slack client for Web API requests
 slack_client = SlackClient(SLACK_BOT_TOKEN)
@@ -72,7 +72,7 @@ def hello():
     slack_client.api_call(
     "chat.postMessage",
     channel=user_id,
-    text=qanda(user_id, ip_add, timestamp),
+    text=qanda(user_id, ip_add),
     attachments=attachments_json
     )
     response_timer(secs,user_id, ip_add, slack_client, escalate_channel)
