@@ -61,6 +61,7 @@ slack_client = SlackClient(SLACK_BOT_TOKEN)
 app = Flask(__name__)
 BROKER_URL=os.environ['REDIS_URL']
 CELERY_RESULT_BACKEND=os.environ['REDIS_URL']
+app = celery.Celery('example')
 
 # Helper for verifying that requests came from Slack
 def verify_slack_token(request_token):
