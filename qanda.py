@@ -57,27 +57,3 @@ def escalate(user_id, ip_add, slack_client, escalate_channel):
     slack_client.api_call("chat.postMessage", channel=escalate_channel, text=reply, as_user=True)
     return
 
-def start_response_timer(timeout_secs,user_id, ip_add, slack_client, escalate_channel):
-# If timer is exceeded escalate to secops
-    t=threading.Timer(30,time_out(user_id, ip_add, slack_client, escalate_channel))
-    print(timeout_secs)
-    print("###Timer Started ###")
-    # Start the timer
-    t.start()
-    return
-        
-# If user responds stop the timer  
-def stopper():
-    t.cancel()
-    print "stopped"
-    logger.info("Timer stopped")
-    return
-    
-def time_out(user_id, ip_add, slack_client, escalate_channel):
-    # print("### Time out ran ###")    
-    logger.warning("Timeout Detected !")
-    # This function defines what to do in the case of a negative response from a user. ie notify admin.
-    name="<@"+user_id+">"
-    reply =  " This is a test, " + name + "s login from "+ip_add+" has not responded in required time interval!!!"
-    slack_client.api_call("chat.postMessage", channel=escalate_channel, text=reply, as_user=True)
-    return
