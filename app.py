@@ -17,7 +17,7 @@ import re
 import logging
 from qanda import * 
 from realert import ReAlert
-from celery import Celery
+from tasks import *
 # import pprint
 
 from slackclient import SlackClient
@@ -61,7 +61,6 @@ slack_client = SlackClient(SLACK_BOT_TOKEN)
 app = Flask(__name__)
 BROKER_URL=os.environ['REDIS_URL']
 CELERY_RESULT_BACKEND=os.environ['REDIS_URL']
-app = celery.Celery('example')
 
 # Helper for verifying that requests came from Slack
 def verify_slack_token(request_token):
@@ -70,10 +69,6 @@ def verify_slack_token(request_token):
         logger.warning("Received {} but was expecting {}".format(request_token, SLACK_VERIFICATION_TOKEN))
         return make_response("Request contains invalid Slack verification token", 403)
 
-
-@app.task
-def add(x, y):
-    return x + y
 
 
 # Test Code Entry Point
