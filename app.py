@@ -17,7 +17,7 @@ import re
 import logging
 from qanda import * 
 from realert import ReAlert
-from tasks import *
+import celery
 # import pprint
 
 from slackclient import SlackClient
@@ -61,6 +61,16 @@ slack_client = SlackClient(SLACK_BOT_TOKEN)
 app = Flask(__name__)
 BROKER_URL=os.environ['REDIS_URL']
 CELERY_RESULT_BACKEND=os.environ['REDIS_URL']
+
+
+celery_i = celery.Celery('example')
+
+@celery_i.task
+def my_background_task(arg1, arg2):
+    # some long running task here
+    print(" ### I am a background task ### ")
+    with celery_i.app_context():
+        print(" ### I am a background task ### ")
 
 # Helper for verifying that requests came from Slack
 def verify_slack_token(request_token):
