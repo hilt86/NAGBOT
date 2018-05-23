@@ -69,8 +69,8 @@ celery_i = celery.Celery('example')
 def my_background_task(arg1, arg2):
     # some long running task here
     print(" ### I am a background task ### ")
-    with celery_i.app_context():
-        print(" ### I am a background task ### ")
+    return "background task finished"
+        
 
 # Helper for verifying that requests came from Slack
 def verify_slack_token(request_token):
