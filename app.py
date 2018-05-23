@@ -15,7 +15,8 @@ import time
 # from threading import *
 import re
 import logging
-from qanda import * 
+# from qanda import * 
+from qanda import qanda, escalate
 from realert import ReAlert
 import celery
 # import pprint
@@ -155,7 +156,7 @@ def message_actions():
     else:
         message_text = "something is wrong"
 
-    response = slack_client.api_call(
+    slack_client.api_call(
       "chat.update",
       channel=form_json["channel"]["id"],
       ts=form_json["message_ts"],
