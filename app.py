@@ -83,7 +83,7 @@ def verify_slack_token(request_token):
 def run_background():
     print(" ### background app route ### ")
     my_background_task.delay(10, 20)
-    return make_response("JOB OK", 200)
+    return 'gotcha'
 
 
 # Test Code Entry Point
