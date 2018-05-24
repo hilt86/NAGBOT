@@ -12,6 +12,18 @@ John Omer-Cooper
 
 Bandr Talie O Alkhuzaie
 
+## In this guide:
+[**NAGBOT**](#nagbot)
+- [Pre-requisites](#pre-requisites)
+- [Installation](#installation)
+ - [1. Deploy NagBot to a server or cloud service.](#1-deploy-nagbot-to-a-server-or-cloud-service)
+ - [2. Setting up NagBot in Slack.](#2-setting-up-nagbot-in-slack)
+  - [2.1 Create a NagBot Slack app.](#21-create-a-nagbot-slack-app-on-apislackcom)
+  - [2.2 Tokens, Verification and Environmental variables.](#22-tokens-verification-and-environmental-variables)
+  - [2.3 Create a channel to receive escalation events.](#23-create-a-channel-to-receive-escalation-events)
+  - [2.4 Test it works.](#24-test-it-works)
+ - 3 [Good to go](#3-good-to-go)
+
 # NAGBOT 
 
 Project Nagbot is a Slack bot that hopes to solve the problem of sorting and detecting security events in large volumes of security data and make security alerting more manageable.
@@ -26,13 +38,6 @@ Project Nagbot is a Slack bot that hopes to solve the problem of sorting and det
 1. Elastalert uses or creates an elasticsearch index to store it's alert state. Occasionly this index will need to be deleted using elasticsearch management tools and the "elastalert-create-index" command line utility.
 
 ## Installation
-1. Deploy NagBot to a server or cloud service.
-2. Setting up NagBot in Slack.
- - 2.1 Create a NagBot Slack app.
- - 2.2 Tokens, Verification and Environmental variables.
- - 2.3 Create a channel to receive escalation events.
- - 2.4 Test it works.
-3 Good to go
 
 ## 1. Deploy NagBot to a server or cloud service.
 
