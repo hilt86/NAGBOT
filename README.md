@@ -22,7 +22,7 @@ Bandr Talie O Alkhuzaie
   - [2.2 Tokens, Verification and Environmental variables.](#22-tokens-verification-and-environmental-variables)
   - [2.3 Create a channel to receive escalation events.](#23-create-a-channel-to-receive-escalation-events)
   - [2.4 Test it works.](#24-test-it-works)
- - 3 [Good to go](#3-good-to-go)
+ - [3. Good to go](#3-good-to-go)
 
 # NAGBOT 
 
