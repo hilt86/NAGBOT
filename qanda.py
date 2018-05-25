@@ -5,9 +5,6 @@ import logging
 import threading
 from threading import Timer
 
-# create logger
-# module_logger = logging.getLogger('nagbot.realert.qanda')
-
 SLACK_BOT_TOKEN =  os.environ["NAGBOT_SLACK_BOT_TOKEN"]
 slack_client = SlackClient(SLACK_BOT_TOKEN)
 test_attachments_json = [
@@ -48,11 +45,9 @@ def qanda(user_id, ip_add):
     )
     
 
-def escalate(user_id, ip_add, slack_client, escalate_channel):
-    # print("### Escalate ran ###")
+def escalate(user_id, ip_add, slack_client, escalate_channel):    
     logger.warning("Escalation Detected !")
     # This function defines what to do in the case of a negative response from a user. ie notify admin.
     reply =  "SECURITY ALERT : " + "There has been a suspicious login using <@" + user_id + ">'s " + "credential"
     slack_client.api_call("chat.postMessage", channel=escalate_channel, text=reply, as_user=True)
     return
-

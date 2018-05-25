@@ -15,11 +15,9 @@ import time
 # from threading import *
 import re
 import logging
-# from qanda import * 
 from qanda import qanda, escalate
 from realert import ReAlert
 import celery
-# import pprint
 
 from slackclient import SlackClient
 
@@ -29,15 +27,11 @@ else:
     logging.basicConfig(level=logging.INFO)
 
 logger = logging.getLogger('nagbot')
-# logger = logging.getLogger(__name__)
-# logger.setLevel(logging.DEBUG)
 
 # Create Formatter
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-# create console handler and set level to debug
+# create console handler
 console = logging.StreamHandler()
-# This will take anything from DEBUG and Up
-console.setLevel(logging.DEBUG)
 console.setFormatter(formatter)
 # add the handlers to the logger
 logger.addHandler(console)
@@ -53,7 +47,6 @@ escalate_channel=os.environ["NAGBOT_SLACK_ESCALATE_CHANNEL"]
 # Global Test Variables
 ip_add="1.1.1.1"
 timeout_secs=30
-
 
 # Slack client for Web API requests
 slack_client = SlackClient(SLACK_BOT_TOKEN)
@@ -93,15 +86,12 @@ def api_json_nagbot():
     # Create ReAlert Object
     rxjs = ReAlert()
     # Get Data being Sent
-    rxjsData = rxjs.receiveJSON(request)
-    # print(rxjsData)
+    rxjsData = rxjs.receiveJSON(request)    
     # Write this Data to File
     if rxjsData:
         ip_add, user_id, timeStamp = rxjsData
         logger.debug("IP Address: {0} User Id: {1} timeStamp: {2}".format(ip_add, user_id, timeStamp))
-        qanda(user_id, ip_add)
-        # rxjs.writeJSONToFile(request.json)
-        # message_actions()
+        qanda(user_id, ip_add)        
         return make_response("JSON OK", 200)
     else:
         return make_response("JSON BAD", 400)
