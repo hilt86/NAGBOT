@@ -99,7 +99,6 @@ def api_json_nagbot():
     if rxjsData:
         ip_add, user_id, timeStamp = rxjsData
         logger.debug("IP Address: {0} User Id: {1} timeStamp: {2}".format(ip_add, user_id, timeStamp))
-        # qanda(user_id, ip_add, slack_client, slack_channel, nagbot_user_id, admin, resp_time, timeStamp)
         qanda(user_id, ip_add)
         # rxjs.writeJSONToFile(request.json)
         # message_actions()
@@ -149,12 +148,12 @@ def message_actions():
     selection = form_json["actions"][0]["selected_options"][0]["value"]    
     response_user = form_json["user"]["id"]   
     if selection == "no":
-        message_text = "ok, alerting secops"
+        message_text = "OK, alerting secops"
         escalate(response_user, ip_add, slack_client, escalate_channel)
     elif selection == "yes":
-        message_text = "sorry to bother you!"
+        message_text = "Sorry to bother you!"
     else:
-        message_text = "something is wrong"
+        message_text = "Something is wrong"
 
     slack_client.api_call(
       "chat.update",
