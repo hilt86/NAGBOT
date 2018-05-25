@@ -43,7 +43,8 @@ def qanda(user_id, ip_add):
     slack_client.api_call(
     "chat.postMessage",
     channel=user_id,
-    text=("Hey " + user_id + " did you just login from " + ip_add + " ?"),
+    name="<@"+user_id+">"
+    text=("Hey " + name + " did you just login from " + ip_add + " ?"),
     attachments=test_attachments_json
     )
     
