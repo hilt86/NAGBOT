@@ -43,8 +43,7 @@ def qanda(user_id, ip_add):
     slack_client.api_call(
     "chat.postMessage",
     channel=user_id,
-    name="<@"+user_id+">"
-    text=("Hey " + name + " did you just login from " + ip_add + " ?"),
+    text=("Hey <@" + user_id + "> did you just login from " + ip_add + " ?"),
     attachments=test_attachments_json
     )
     
@@ -53,8 +52,7 @@ def escalate(user_id, ip_add, slack_client, escalate_channel):
     # print("### Escalate ran ###")
     logger.warning("Escalation Detected !")
     # This function defines what to do in the case of a negative response from a user. ie notify admin.
-    name="<@"+user_id+">"
-    reply =  "SECURITY ALERT : " + "There has been a suspicious login using " + name + "'s " + "credential"
+    reply =  "SECURITY ALERT : " + "There has been a suspicious login using <@" + user_id + ">'s " + "credential"
     slack_client.api_call("chat.postMessage", channel=escalate_channel, text=reply, as_user=True)
     return
 
