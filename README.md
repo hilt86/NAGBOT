@@ -12,7 +12,6 @@
  - [3. Integration test](#3-good-to-go)
  - [4. Credits](#4-credits)
 
-# What is Nagbot? 
 
 ### Is your security operations team faced with finding a needle within a haystack? 
 
@@ -35,23 +34,21 @@ Often the first thing security teams do is install a centralized logging system 
 As the security program for an organization grows teams eventually put in place measures to reduce or filter failed logins using a VPN which means that there are less failed authorization attempts to sort through, but is this the best we can do?
 
 
-**Introducing Nagbot**
+#Introducing Nagbot
 
 Our project, dubbed Nagbot takes this a step further and extends what is quickly becoming the industry standard logging and alerting (Elasticsearch + Elastalert) to further scrutinize successful logins. 
 
-NagBot will send messages directly to a user:
+On successful SSHD login NagBot will send messages directly to the authenticated user using Slack :
 
 ![10_nagbotmessage](https://user-images.githubusercontent.com/37161577/40458814-53a3ef7a-5f41-11e8-90a4-5f97ae3386bd.png)
 
-Respond directly to the user if all is OK
 
-Or 
+The user then selects a response from the dropdown "That was me" or "Wasn't me!" and Nagbot takes appropriate action. If the user responds "Wasn't me" Nagbot escalates the event to a separate Slack channel dedicated to security incidents:
 
-Escalate the event to admin or security personnel via the designated escalation channel.
 
 ![11_securityalert](https://user-images.githubusercontent.com/37161577/40458815-5628e9f8-5f41-11e8-82b2-eae5cfbb9697.png)
 
-The best bit about Nagbot is it is licensed under an open source license so it can be easily deployed without any software licensing. See install instructions below.
+The best bit about Nagbot is it is licensed under an open source license so it can be easily deployed without any software licensing. 
 
 ### Pre-requisites
 
