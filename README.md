@@ -225,10 +225,10 @@ This project is a student project for a [University of Southern Queensland](http
 
 **Project Members** 
 
-@hilt86
+[Hilton De Meillon](https://github.com/hilt86)
 
-Dustin Lee @Dustin-USQ
+[Dustin Lee](https://github.com/Dustin-USQ)
 
-John Omer-Cooper @johno-c
+[John Omer-Cooper](https://github.com/johno-c)
 
-Bandr Talie O Alkhuzaie @bandru1078238
+[Bandr Talie O Alkhuzaie](https://github.com/bandru1078238)
