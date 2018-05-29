@@ -221,6 +221,8 @@ The user then selects a response from the dropdown "That was me" or "Wasn't me!"
 
 ### 4 Credits
 
+Original concept from [Ryan Huber](https://slack.engineering/distributed-security-alerting-c89414c992d6) but he took too long to open source his version so we decided to make our own!
+
 This project is a student project for a [University of Southern Queensland](https//www.usq.edu.au) Undergraduate Subject  CSC3600. Any opinions expressed are our own and do not necessarily represent policy of USQ.
 
 **Project Members** 
