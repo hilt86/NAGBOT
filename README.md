@@ -8,8 +8,8 @@
   - [2.1 Create a NagBot Slack app.](#21-create-a-nagbot-slack-app-on-apislackcom)
   - [2.2 Tokens, Verification and Environmental variables.](#22-tokens-verification-and-environmental-variables)
   - [2.3 Create a channel to receive escalation events.](#23-create-a-channel-to-receive-escalation-events)
-  - [2.4 Manual test](#24-test-it-works)
- - [3. Integration test](#3 Integration test)
+  - [2.4 Manual test](#24-manual-test)
+ - [3. Integration test](#3-integration-test)
  - [4. Credits](#4-credits)
 
 
