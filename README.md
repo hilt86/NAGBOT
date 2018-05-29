@@ -34,7 +34,7 @@ Often the first thing security teams do is install a centralized logging system 
 As the security program for an organization grows teams eventually put in place measures to reduce or filter failed logins using a VPN which means that there are less failed authorization attempts to sort through, but is this the best we can do?
 
 
-#Introducing Nagbot
+# Introducing Nagbot
 
 Our project, dubbed Nagbot takes this a step further and extends what is quickly becoming the industry standard logging and alerting (Elasticsearch + Elastalert) to further scrutinize successful logins. 
 
