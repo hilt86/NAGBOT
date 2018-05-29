@@ -9,7 +9,7 @@
   - [2.2 Tokens, Verification and Environmental variables.](#22-tokens-verification-and-environmental-variables)
   - [2.3 Create a channel to receive escalation events.](#23-create-a-channel-to-receive-escalation-events)
   - [2.4 Manual test](#24-test-it-works)
- - [3. Integration test](#3-good-to-go)
+ - [3. Integration test](#3 Integration test)
  - [4. Credits](#4-credits)
 
 
