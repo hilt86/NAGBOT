@@ -210,29 +210,25 @@ From the command line use curl to send the json to NagBot
 
 Now that you have tested the components you should be able to login to one of your systems monitored by Logstash / Elasticsearch from a few different IP addresses and you should get a challenge by Nagbot :
 
-NagBot will send messages directly to a user:
 
 ![10_nagbotmessage](https://user-images.githubusercontent.com/37161577/40458814-53a3ef7a-5f41-11e8-90a4-5f97ae3386bd.png)
 
-Respond directly to the user if all is OK
 
-Or 
+The user then selects a response from the dropdown "That was me" or "Wasn't me!" and Nagbot takes appropriate action. If the user responds "Wasn't me" Nagbot escalates the event to a separate Slack channel dedicated to security incidents:
 
-Escalate the event to admin or security personnel via the designated escalation channel.
 
 ![11_securityalert](https://user-images.githubusercontent.com/37161577/40458815-5628e9f8-5f41-11e8-82b2-eae5cfbb9697.png)
 
-
 ### 4 Credits
 
-This project is an undertaking for a University of Southern Queensland (USQ) Undergraduate Subject - CSC3600
+This project is a student project for a [University of Southern Queensland](https//www.usq.edu.au) Undergraduate Subject  CSC3600. Any opinions expressed are our own and do not necessarily represent policy of USQ.
 
 **Project Members** 
 
-Hilton De Meillon
+@hilt86
 
-Dustin Lee
+Dustin Lee @Dustin-USQ
 
-John Omer-Cooper
+John Omer-Cooper @johno-c
 
-Bandr Talie O Alkhuzaie
+Bandr Talie O Alkhuzaie @bandru1078238
