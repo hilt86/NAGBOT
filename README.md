@@ -1,16 +1,3 @@
-# CSC3600
-## Semester 1 2018
-This Repository is for a University of Southern Queensland (USQ) Undergraduate Subject - CSC3600
-
-**Project Members** 
-
-Hilton De Meillon
-
-Dustin Lee
-
-John Omer-Cooper
-
-Bandr Talie O Alkhuzaie
 
 ## In this guide:
 [**NAGBOT**](#nagbot)
@@ -21,27 +8,50 @@ Bandr Talie O Alkhuzaie
   - [2.1 Create a NagBot Slack app.](#21-create-a-nagbot-slack-app-on-apislackcom)
   - [2.2 Tokens, Verification and Environmental variables.](#22-tokens-verification-and-environmental-variables)
   - [2.3 Create a channel to receive escalation events.](#23-create-a-channel-to-receive-escalation-events)
-  - [2.4 Test it works.](#24-test-it-works)
- - [3. Good to go](#3-good-to-go)
+  - [2.4 Manual test](#24-test-it-works)
+ - [3. Integration test](#3-good-to-go)
+ - [4. Credits](#4-credits)
 
-# NAGBOT 
+# What is Nagbot? 
 
-### Your security operations logs million of events, today we logged:
+### Is your security operations team faced with finding a needle within a haystack? 
 
-![39_millionevents](https://user-images.githubusercontent.com/37161577/40632771-e4adc3ca-632d-11e8-91c8-b2d7d481e9f5.png)
+In dynamic, multi-cloud deployments developers and security operations are faced with millions of security events every day. It is not uncommon for a log aggregation or SIEM system to have billions or even trillions of events which very quickly becomes unmanageable, for example :
 
-Events like this:
+```
+May 28 11:18:19 elastic01 sshd[27085]: Failed password for jamesm from 74.45.57.208 port 61506 ssh2
+May 28 23:37:23 elastic01 sshd[28450]: Accepted publickey for kevinm from 45.83.25.161 port 36578 ssh2: RSA SHA256:38jf892f9h2398fp982hf398h23f9
+May 28 23:37:25 elastic01 sshd[28568]: Accepted publickey for kevinm from 50.18.27.141 port 27347 ssh2: RSA SHA256:38jf892f9h2398fp982hf398h23f9
+May 28 23:37:34 elastic01 sshd[28634]: Accepted publickey for kevinm from 41.77.79.74 port 36000 ssh2: RSA SHA256:38jf892f9h2398fp982hf398h23f9
+May 28 23:37:43 elastic01 sshd[28699]: Accepted publickey for kevinm from 104.163.162.211 port 39204 ssh2: RSA SHA256:38jf892f9h2398fp982hf398h23f9
+May 28 23:37:52 elastic01 sshd[28764]: Accepted publickey for kevinm from 45.32.7.130 port 31533 ssh2: RSA SHA256:38jf892f9h2398fp982hf398h23f9
+May 28 23:40:23 elastic01 sshd[28831]: Failed publickey for kevinm from 140.18.227.141 port 59899 ssh2: RSA SHA256:89asdlajksdas71ufhiol3fhsidfh
+May 29 01:39:28 elastic01 sshd[26894]: Accepted password for jamesm from 8.45.7.8 port 49902 ssh2
+```
 
-![kmitnick](https://user-images.githubusercontent.com/37161577/40632783-081a8b5e-632e-11e8-8514-697389810f38.png)
+
+Often the first thing security teams do is install a centralized logging system - which is a good step - but it quickly leads to log fatigue, where security analysts are overwhelmed by the amount of information they need to analyze. 
+
+As the security program for an organization grows teams eventually put in place measures to reduce or filter failed logins using a VPN which means that there are less failed authorization attempts to sort through, but is this the best we can do?
 
 
-Is this something to be worried about, is this really kmitnick, why so many IP's, are they travelling, using a VPN, is your load balancer scaling to demand ... ?
+**Introducing Nagbot**
 
-How do you find this in a log with a million or more events ?
+Our project, dubbed Nagbot takes this a step further and extends what is quickly becoming the industry standard logging and alerting (Elasticsearch + Elastalert) to further scrutinize successful logins. 
 
-**NagBot can help.**
+NagBot will send messages directly to a user:
 
-Project Nagbot is a Slack bot that hopes to solve the problem of sorting and detecting security events in large volumes of security data and make security alerting more manageable.
+![10_nagbotmessage](https://user-images.githubusercontent.com/37161577/40458814-53a3ef7a-5f41-11e8-90a4-5f97ae3386bd.png)
+
+Respond directly to the user if all is OK
+
+Or 
+
+Escalate the event to admin or security personnel via the designated escalation channel.
+
+![11_securityalert](https://user-images.githubusercontent.com/37161577/40458815-5628e9f8-5f41-11e8-82b2-eae5cfbb9697.png)
+
+The best bit about Nagbot is it is licensed under an open source license so it can be easily deployed without any software licensing. See install instructions below.
 
 ### Pre-requisites
 
@@ -143,9 +153,10 @@ Copy this to a NAGBOT_SLACK_CHANNEL environmental variable onto your server.
 
 eg. `$export NAGBOT_SLACK_CHANNEL=”ABCDEFGHI”`
 
-### 2.4 Test it works.
+### 2.4 Manual test
 
-To test it generate an alert from Elastalert or use curl to send Nagbot a json test event.
+To test slackbot manually generate an alert from Elastalert or use curl to send Nagbot a json test event.
+
 For example:
 
 #### test_event.json
@@ -161,8 +172,8 @@ For example:
      "country_iso_code": "AU",
      "region_name": "Victoria",
      "location": {
-      "lon": 145.4741,
-      "lat": -38.0702
+      "lon": 141.4741,
+      "lat": -34.0702
      }
     },
     "method": "password",
@@ -177,8 +188,8 @@ For example:
  },
  "offset": 162887,
  "beat": {
-  "hostname": "your elastic serach server",
-  "name": " your elastic serach server ",
+  "hostname": "your.elastic.search.server",
+  "name": " your.elastic.search.server ",
   "version": "6.2.3"
  },
  "prospector": {
@@ -198,9 +209,9 @@ From the command line use curl to send the json to NagBot
 `curl -XPOST --header "Content-Type: application/json" 'https://yourserver.nagbotapp.com/api/json/nagbot/' -d @test_event.json`
 
 
-### 3 Good to go.
+### 3 Integration test
 
-That’s it NagBot should be ready to use.
+Now that you have tested the components you should be able to login to one of your systems monitored by Logstash / Elasticsearch from a few different IP addresses and you should get a challenge by Nagbot :
 
 NagBot will send messages directly to a user:
 
@@ -213,3 +224,18 @@ Or
 Escalate the event to admin or security personnel via the designated escalation channel.
 
 ![11_securityalert](https://user-images.githubusercontent.com/37161577/40458815-5628e9f8-5f41-11e8-82b2-eae5cfbb9697.png)
+
+
+### 4 Credits
+
+This project is an undertaking for a University of Southern Queensland (USQ) Undergraduate Subject - CSC3600
+
+**Project Members** 
+
+Hilton De Meillon
+
+Dustin Lee
+
+John Omer-Cooper
+
+Bandr Talie O Alkhuzaie
