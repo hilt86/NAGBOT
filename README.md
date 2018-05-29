@@ -26,6 +26,21 @@ Bandr Talie O Alkhuzaie
 
 # NAGBOT 
 
+### Your security operations logs million of events, today we logged:
+
+![39_millionevents](https://user-images.githubusercontent.com/37161577/40632771-e4adc3ca-632d-11e8-91c8-b2d7d481e9f5.png)
+
+Events like this:
+
+![kmitnick](https://user-images.githubusercontent.com/37161577/40632783-081a8b5e-632e-11e8-8514-697389810f38.png)
+
+
+Is this something to be worried about, is this really kmitnick, why so many IP's, are they travelling, using a VPN, is your load balancer scaling to demand ... ?
+
+How do you find this in a log with a million or more events ?
+
+**NagBot can help.**
+
 Project Nagbot is a Slack bot that hopes to solve the problem of sorting and detecting security events in large volumes of security data and make security alerting more manageable.
 
 ### Pre-requisites
