@@ -63,7 +63,20 @@ The best bit about Nagbot is it is licensed under an open source license so it c
 
 ## 1. Deploy NagBot to a server or cloud service.
 
-#### More to come
+### HEROKU Web Service
+
+#### Install Heroku Tools
+
+#### Clone NAGBOT Repository
+```shell
+git clone https://github.com/hilt86/NAGBOT.git
+cd NAGBOT
+```
+
+#### Install App to Heroku
+```shell
+heroku create
+```
 
 ## 2. Setting up NagBot in Slack.
 ### 2.1 Create a NagBot Slack app on [api.slack.com](https://api.slack.com/apps?utm_source=events&utm_campaign=build-bot-workshop&utm_medium=workshop)
