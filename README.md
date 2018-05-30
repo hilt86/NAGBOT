@@ -63,9 +63,7 @@ The best bit about Nagbot is it is licensed under an open source license so it c
 
 ## 1. Deploy NagBot to a server or cloud service.
 
-### HEROKU Web Service
-
-#### Install Heroku Tools
+### 1.1 HEROKU Web Service
 
 #### Clone NAGBOT Repository
 ```shell
@@ -83,13 +81,14 @@ heroku create
 Settings --> Config Vars
 
 | Config Var                        | Value                                     |
-| -------------                     | :-------------:                           |
+| -------------                     | -------------                             |
 | DEBUG                             | \< True \| False \>                       |
 | NAGBOT_SLACK_BOT_TOKEN            | \< Bot Token From Slack \>                |
 | NAGBOT_SLACK_CHANNEL              | \< Slack Channel ID \>                    |
 | NAGBOT_SLACK_ESCALATE_CHANNEL     | \< Slack Security/Escalation Channel ID \>|
 | NAGBOT_SLACK_VERIFICATION_TOKEN   | \< Slack Verification Token \>            |
 | NAGBOT_USER_ID                    | \< Slack Nagbot User ID \>                |
+
 
 ## 2. Setting up NagBot in Slack.
 ### 2.1 Create a NagBot Slack app on [api.slack.com](https://api.slack.com/apps?utm_source=events&utm_campaign=build-bot-workshop&utm_medium=workshop)
