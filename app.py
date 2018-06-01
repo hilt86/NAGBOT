@@ -9,16 +9,15 @@
 from flask import Flask, request, session, g, redirect, url_for, abort, render_template, flash, json, Response, jsonify, make_response
 import os
 import json
-import random
 import sys
 import time
 # import threading
 # from threading import *
 import re
 import logging
-from qanda import * 
+from qanda import qanda, escalate
 from realert import ReAlert
-# import pprint
+import celery
 
 from slackclient import SlackClient
 
@@ -28,15 +27,11 @@ else:
     logging.basicConfig(level=logging.INFO)
 
 logger = logging.getLogger('nagbot')
-# logger = logging.getLogger(__name__)
-# logger.setLevel(logging.DEBUG)
 
 # Create Formatter
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-# create console handler and set level to debug
+# create console handler
 console = logging.StreamHandler()
-# This will take anything from DEBUG and Up
-console.setLevel(logging.DEBUG)
 console.setFormatter(formatter)
 # add the handlers to the logger
 logger.addHandler(console)
@@ -51,14 +46,25 @@ escalate_channel=os.environ["NAGBOT_SLACK_ESCALATE_CHANNEL"]
 
 # Global Test Variables
 ip_add="1.1.1.1"
-secs=30
-timestamp = time.asctime( time.localtime(time.time()) )
+timeout_secs=30
 
 # Slack client for Web API requests
 slack_client = SlackClient(SLACK_BOT_TOKEN)
 
 # Flask webserver for incoming traffic from Slack
 app = Flask(__name__)
+BROKER_URL=os.environ['REDIS_URL']
+CELERY_RESULT_BACKEND=os.environ['REDIS_URL']
+
+
+celery_i = celery.Celery('example')
+
+@celery_i.task
+def my_background_task(arg1, arg2):
+    # some long running task here
+    print(" ### I am a background task ### ")
+    return "background task finished"
+        
 
 # Helper for verifying that requests came from Slack
 def verify_slack_token(request_token):
@@ -67,16 +73,12 @@ def verify_slack_token(request_token):
         logger.warning("Received {} but was expecting {}".format(request_token, SLACK_VERIFICATION_TOKEN))
         return make_response("Request contains invalid Slack verification token", 403)
 
-@app.route("/")
-def hello():
-    slack_client.api_call(
-    "chat.postMessage",
-    channel=user_id,
-    text=qanda(user_id, ip_add, timestamp),
-    attachments=attachments_json
-    )
-    response_timer(secs,user_id, ip_add, slack_client, escalate_channel)
-    return render_template('index.html')
+@app.route('/')
+def run_background():
+    print(" ### background app route ### ")
+    my_background_task.delay(10, 20)
+    return 'gotcha'
+
 
 # Test Code Entry Point
 @app.route('/api/json/nagbot/', methods = ['POST'])
@@ -84,16 +86,12 @@ def api_json_nagbot():
     # Create ReAlert Object
     rxjs = ReAlert()
     # Get Data being Sent
-    rxjsData = rxjs.receiveJSON(request)
-    # print(rxjsData)
+    rxjsData = rxjs.receiveJSON(request)    
     # Write this Data to File
     if rxjsData:
         ip_add, user_id, timeStamp = rxjsData
         logger.debug("IP Address: {0} User Id: {1} timeStamp: {2}".format(ip_add, user_id, timeStamp))
-        # qanda(user_id, ip_add, slack_client, slack_channel, nagbot_user_id, admin, resp_time, timeStamp)
-        test(user_id, ip_add)
-        # rxjs.writeJSONToFile(request.json)
-        # message_actions()
+        qanda(user_id, ip_add)        
         return make_response("JSON OK", 200)
     else:
         return make_response("JSON BAD", 400)
@@ -138,17 +136,16 @@ def message_actions():
 
     # Check to see what the user's selection was and update the message accordingly
     selection = form_json["actions"][0]["selected_options"][0]["value"]    
-    response_user = form_json["user"]["id"]    
-    stopper()
+    response_user = form_json["user"]["id"]   
     if selection == "no":
-        message_text = "ok, alerting secops"
+        message_text = "OK, alerting secops"
         escalate(response_user, ip_add, slack_client, escalate_channel)
     elif selection == "yes":
-        message_text = "sorry to bother you!"
+        message_text = "Sorry to bother you!"
     else:
-        message_text = "something is wrong"
+        message_text = "Something is wrong"
 
-    response = slack_client.api_call(
+    slack_client.api_call(
       "chat.update",
       channel=form_json["channel"]["id"],
       ts=form_json["message_ts"],
